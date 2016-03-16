@@ -1,8 +1,19 @@
 
 # bauhaus: a simplistic tertiary-analysis system for PacBio
 
-
 ## What is this?
+
+## How to use it
+
+   % bauhaus validate -p {protocolName} -t condition-table.csv
+
+   OR
+
+   % bauhaus gen -p {protocolName} -t condition-table.csv
+
+   OR
+
+   % bauhaus run -p {protocolName} -t condition-table.csv
 
 
 ## What does it consist of?
