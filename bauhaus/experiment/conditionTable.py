@@ -1,10 +1,14 @@
-__all__ = [ "ConditionTable", "ResequencingConditionTable" ]
+__all__ = [ "ConditionTable",
+            "ResequencingConditionTable",
+            "CoverageTitrationConditionTable",
+            "conditionTableForProtocol" ]
 
 import pandas
 import os.path as op
-from genomes import GENOMES
+import bauhaus.pbls2 as
 
-class InputValidationError(Exception): pass
+class TableValidationError(Exception): pass
+class InputResolutionError(Exception): pass
 
 class _DfHelpers(object):
     @staticmethod
@@ -23,16 +27,18 @@ class ConditionTable(object):
     separately from the condition table, which is meant only to encode
     variables and their associated inputs.
     """
-    def __init__(self, inputCsv):
+    def __init__(self, inputCsv, resolver):
         if not op.isfile(inputCsv):
             raise ValueError("Missing input file: %s" % inputCsv)
         try:
             self.df = pandas.read_csv(inputCsv)
         except:
             raise InputValidationError("Input CSV file can't be read/parsed")
-        self.validateInput()
+        self._validateTable()
+        self._inputsByCondition = None
+        self._resolveInputs(resolver)
 
-    def validateInput(self):
+    def _validateTable(self):
         """
         Validate the input CSV file
         Exception on invalid input.
@@ -55,7 +61,12 @@ class ConditionTable(object):
             condition = self.condition(c)
             for variable in self.variables:
                 if len(condition[variable].unique()) != 1:
-                    raise InputValidationError("Conditions must be homogeneous---no variation in variables within a condition")
+                    raise TableValidationError(
+                        "Conditions must be homogeneous---no variation in variables within a condition")
+
+
+    def _resolveInputs(self, resolver):
+        raise NotImplementedError
 
     @property
     def conditions(self):
@@ -97,12 +108,16 @@ class ResequencingConditionTable(ConditionTable):
         if "Genome" not in self.df.columns:
             raise InputValidationError("'Genome' column must be present")
 
-    def validateInput(self):
+    def _validateTable(self):
         """
         Additional validation: "Genome" column required
         """
-        super().validateInput()
+        super()._validateTable()
         self._validateGenomeColumnPresent()
+
+    def _resolveInputs(self, resolver):
+        super()._resolveInputs(resolver)
+        # more: resolve the reference
 
     @property
     def variables(self):
@@ -140,7 +155,16 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
                 'There must be at least one covariate ("p_" variable) in the condition table')
 
 
-    def validateInput(self):
-        super().validateInput()
+    def _validateTable(self):
+        super()._validateTable()
         self._validateNoUnrecognizedGenomes()
         self._validateAtLeastOnePVariable()
+
+
+    def _resolveInputs(self, requires):
+        super()._resolveInputs()
+        # More: resolve the reference mask
+
+
+def conditionTableForProtocol(protocol, inputCsv, resolver):
+    raise NotImplementedError
