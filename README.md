@@ -5,16 +5,21 @@
 
 ## How to use it
 
+   ```sh
    % bauhaus validate -p {protocolName} -t condition-table.csv
+   ```
 
    OR
 
+   ```sh
    % bauhaus gen -p {protocolName} -t condition-table.csv
+   ```
 
    OR
 
+   ```sh
    % bauhaus run -p {protocolName} -t condition-table.csv
-
+   ```
 
 ## What does it consist of?
 

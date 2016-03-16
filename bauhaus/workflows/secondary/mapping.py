@@ -66,7 +66,6 @@ def genAlignmentSetConsolidate(pflow, alignmentSets):
     # CONSOLIDATE entails actually merging BAM files
     pflow.genRuleOnce("consolidateAlignmentSets",
                       "$grid dataset consolidate $out $in")
-
     outputs = [ "{condition}/mapping/{movieName}.alignmentset.xml" ]
     return pflow.genBuildStatement(outputs,
                                    "consolidateAlignmentSets",
@@ -109,7 +108,7 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
             for (i, subreadsSetChunk) in enumerate(subreadsSetChunks):
                 with pflow.context("chunkNum", i):
                     buildVariables = dict(reference=reference, ncpus=8)
-                    buildStmt = pflow.genBuildStatement(["{condition}/mapping/{movieName}.chunk{chunkNum}.alignmentset.xml"],
+                    buildStmt = pflow.genBuildStatement(["{condition}/mapping_chunks/{movieName}.chunk{chunkNum}.alignmentset.xml"],
                                                         "map",
                                                         [subreadsSetChunk],
                                                         buildVariables)
