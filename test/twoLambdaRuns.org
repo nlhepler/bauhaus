@@ -1,0 +1,4 @@
+| Condition  |      RunCode | ReportsFolder | Genome    | p_Replicate |
+|------------+--------------+---------------+-----------+-------------|
+| Replicate1 | 3150128-0001 |               | lambdaNEB |           1 |
+| Replicate2 | 3150128-0002 |               | lambdaNEB |           2 |
