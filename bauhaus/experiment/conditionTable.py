@@ -5,7 +5,6 @@ __all__ = [ "ConditionTable",
 
 import pandas
 import os.path as op
-import bauhaus.pbls2 as
 
 class TableValidationError(Exception): pass
 class InputResolutionError(Exception): pass
@@ -51,10 +50,10 @@ class ConditionTable(object):
           - Malformed CSV input (can't be parsed)
           - Incorrect header row
           - Too few/many p_ conditions
-          - Run folder doesn't exist or is inaccessible
           - Varying covariate levels under a single condition name
         """
         self._validateConditionsAreHomogeneous()
+        self._validateSingleInputEncoding()
 
     def _validateConditionsAreHomogeneous(self):
         for c in self.conditions:
@@ -64,9 +63,48 @@ class ConditionTable(object):
                     raise TableValidationError(
                         "Conditions must be homogeneous---no variation in variables within a condition")
 
+    def _validateSingleInputEncoding(self):
+        cols = self.df.columns
+        inputEncodings = 0
+        if {"ReportsPath"}.issubset(cols):
+            inputEncodings += 1
+        if {"RunCode", "ReportsFolder"}.issubset(cols):
+            inputEncodings += 1
+        if {"RunCode", "ReportsFolderH5"}.issubset(cols):
+            inputEncodings += 1
+        if {"SMRTLinkServer", "JobId"}.issubset(cols):
+            inputEncodings += 1
+        if {"JobPath"}.issubset(cols):
+            inputEncodings += 1
+        if inputEncodings == 0:
+            raise TableValidationError("Input data not encoded in condition table")
+        if inputEncodings > 1:
+            raise TableValidationError("Condition table can only represent input data in one way")
+
+    def _resolveInput(self, resolver, rowRecord):
+        cols = self.df.columns
+        if {"ReportsPath"}.issubset(cols):
+            raise NotImplementedError
+        elif {"RunCode", "ReportsFolder"}.issubset(cols):
+            # Is there a better way?  Maybe make resolvePrimaryPath recognize NaN?
+            if pandas.isnull(rowRecord.ReportsFolder): reports = ""
+            else: reports = rowRecord.ReportsFolder
+            return resolver.resolveSubreadsSet(rowRecord.RunCode, reports)
+        elif {"RunCode", "ReportsFolderH5"}.issubset(cols):
+            raise NotImplementedError
+        elif {"SMRTLinkServer", "JobId"}.issubset(cols):
+            raise NotImplementedError
+        elif {"JobPath"}.issubset(cols):
+            raise NotImplementedError
 
     def _resolveInputs(self, resolver):
-        raise NotImplementedError
+        self._inputsByCondition = {}
+        for condition in self.conditions:
+            subDf = self.condition(condition)
+            inputs = []
+            for row in subDf.to_records():
+                inputs.append(self._resolveInput(resolver, row))
+            self._inputsByCondition[condition] = inputs
 
     @property
     def conditions(self):
@@ -112,11 +150,11 @@ class ResequencingConditionTable(ConditionTable):
         """
         Additional validation: "Genome" column required
         """
-        super()._validateTable()
+        super(ResequencingConditionTable, self)._validateTable()
         self._validateGenomeColumnPresent()
 
     def _resolveInputs(self, resolver):
-        super()._resolveInputs(resolver)
+        super(ResequencingConditionTable, self)._resolveInputs(resolver)
         # more: resolve the reference
 
     @property
@@ -156,13 +194,13 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
 
 
     def _validateTable(self):
-        super()._validateTable()
+        super(CoverageTitrationConditionTable, self)._validateTable()
         self._validateNoUnrecognizedGenomes()
         self._validateAtLeastOnePVariable()
 
 
     def _resolveInputs(self, requires):
-        super()._resolveInputs()
+        super(CoverageTitrationConditionTable, self)._resolveInputs()
         # More: resolve the reference mask
 
 
