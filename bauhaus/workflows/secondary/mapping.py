@@ -55,9 +55,9 @@ def genSubreadsSetSplit(pflow, subreadsSet, splitFactor):
     assert splitFactor >= 1
     pflow.genRuleOnce(
             "splitByZmw",
-            "$grid dataset split --chunks %d --outdir $outdir $in" % (splitFactor,))
+            "$grid dataset split --zmws --chunks %d --outdir $outdir $in" % (splitFactor,))
     movie = movieName(subreadsSet)
-    splitOutputs =  [ "{condition}/subreads_chunks/%s.subreadset.chunk%d.xml" % (movie, i)
+    splitOutputs =  [ "{condition}/subreads_chunks/%s.chunk%d.subreadset.xml" % (movie, i)
                       for i in xrange(splitFactor) ]
     buildStmt = pflow.genBuildStatement(splitOutputs,
                                         "splitByZmw",
