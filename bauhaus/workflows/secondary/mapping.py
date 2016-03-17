@@ -71,7 +71,7 @@ def genAlignmentSetMerge(pflow, alignmentSets):
     # dataset XML files--BAM files not merged
     pflow.genRuleOnce("mergeAlignmentSets",
                       "$grid dataset merge $out $in")
-    outputs = [ "{condition}/mapping/{movieName}.alignmentset.xml" ]
+    outputs = [ "{condition}/mapping/{movieName}_preconsolidate.alignmentset.xml" ]
     buildStmt = pflow.genBuildStatement(outputs,
                                         "mergeAlignmentSets",
                                         alignmentSets)
@@ -79,13 +79,17 @@ def genAlignmentSetMerge(pflow, alignmentSets):
 
 def genAlignmentSetConsolidate(pflow, alignmentSets):
     # CONSOLIDATE entails actually merging BAM files
+    # We first need to run a MERGE.
+    mergedAlignmentSet = genAlignmentSetMerge(pflow, alignmentSets)[0]
     pflow.genRuleOnce("consolidateAlignmentSets",
-                      "$grid dataset consolidate $out $in")
-    outputs = [ "{condition}/mapping/{movieName}.alignmentset.xml" ]
+                      "$grid dataset consolidate $in $out")
+    consolidateAlignmentSet = "{condition}/mapping/{movieName}.alignmentset.xml"
+    consolidatedBam = "{condition}/mapping/{movieName}.aligned_subreads.bam"
+    outputs = [ consolidatedBam, consolidateAlignmentSet ]
     buildStmt = pflow.genBuildStatement(outputs,
                                         "consolidateAlignmentSets",
-                                        alignmentSets)
-    return buildStmt.outputs
+                                        [mergedAlignmentSet])
+    return buildStmt.outputs[1]
 
 # ----------- Mapping --------------------
 
