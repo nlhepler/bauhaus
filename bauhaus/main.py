@@ -18,7 +18,7 @@ def doValidate(args):
 def doGenerate(args):
     ct = doValidate(args)
     gen = availableWorkflows[args.workflow]
-    pflow = PFlow()
+    pflow = PFlow(logDir=args.logDir)
     gen(pflow, ct)
     pflow.write("build.ninja")
     print "Workflow script written to build.ninja."
@@ -37,8 +37,11 @@ def parseArgs():
         "--workflow", "-w",
         action="store", type=str,
         required=True,
-        choices = ["Mapping", "ChunkedMapping"])
-
+        choices = availableWorkflows.keys())
+    parser.add_argument(
+        "--logDir", "-l",
+        default="",
+        action="store", type=str)
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
     validate = subparsers.add_parser("validate", help="Validate the condition table")
     generate = subparsers.add_parser("generate", help="Generate the ninja script to run the workflow")

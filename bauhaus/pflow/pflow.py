@@ -47,10 +47,11 @@ class ContextTracker(object):
 
 class PFlow(ContextTracker):
 
-    def __init__(self):
+    def __init__(self, logDir=""):
         super(PFlow, self).__init__()
         self._rules = OrderedDict()
         self._buildStmts = []
+        self._logDir = logDir
 
     # ---- rules, build targets  -----
 
@@ -90,8 +91,9 @@ class PFlow(ContextTracker):
         with closing(ninja.Writer(f)) as w:
             w.comment("Variables")
             w.newline()
+            w.variable("logdir", self._logDir)
             w.variable("ncpus", "8")
-            w.variable("grid", "qsub -sync y -cwd -V -b y")
+            w.variable("grid", "qsub -sync y -cwd -V -b y -e $logdir -o $logdir")
             w.variable("gridSMP", "$grid -pe smp")
             w.newline()
             w.comment("Rules")
