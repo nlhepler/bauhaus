@@ -36,5 +36,8 @@ setup(
     license=open("COPYING").read(),
     packages = find_packages('.'),
     zip_safe = False,
+    entry_points = {
+        "console_scripts" : [ "bauhaus = bauhaus.main:main" ]
+    },
     install_requires=_get_local_requirements(REQUIREMENTS_TXT)
 )
