@@ -1,6 +1,15 @@
 import argparse
 
-def main():
+def doValidate(args):
+    raise NotImplementedError
+
+def doGenerate(args):
+    raise NotImplementedError
+
+def doRun(args):
+    raise NotImplementedError
+
+def parseArgs():
     parser = argparse.ArgumentParser(prog="bauhaus")
     parser.add_argument(
         "--conditionTable", "-t",
@@ -13,13 +22,23 @@ def main():
         required=True,
         choices = ["Mapping", "ChunkedMapping"])
 
-    subparsers = parser.add_subparsers(help="sub-command help")
+    subparsers = parser.add_subparsers(help="sub-command help", dest="command")
     validate = subparsers.add_parser("validate", help="Validate the condition table")
     generate = subparsers.add_parser("generate", help="Generate the ninja script to run the workflow")
     run = subparsers.add_parser("run", help="Run the workflow")
 
     args = parser.parse_args()
+    return args
+
+def main():
+    args = parseArgs()
     print args
+    if args.command == "validate":
+        doValidate(args)
+    elif args.command == "generate":
+        doGenerate(args)
+    elif args.command == "run":
+        doRun(args)
 
 if __name__ == '__main__':
     main()
