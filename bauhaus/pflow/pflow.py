@@ -92,7 +92,7 @@ class PFlow(ContextTracker):
             w.newline()
             w.variable("ncpus", "8")
             w.variable("grid", "qsub -sync y -cwd -V -b y")
-            w.variable("gridSMP", "$grid -pe smp $ncpus")
+            w.variable("gridSMP", "$grid -pe smp")
             w.newline()
             w.comment("Rules")
             w.newline()
