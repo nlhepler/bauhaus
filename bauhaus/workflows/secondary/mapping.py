@@ -99,7 +99,7 @@ def genMapping(pflow, subreadsSets, reference):
     """
     mapRule = pflow.genRuleOnce(
         "map",
-        "$gridSMP $ncpus pbalign -j$ncpus $in $reference $out")
+        "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
     # TODO: these need to be "merged" within each condition
     for subreadsSet in subreadsSets:
         with pflow.context("movieName", movieName(subreadsSet)):
@@ -116,7 +116,7 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
     """
     mapRule = pflow.genRuleOnce(
         "map",
-        "$gridSMP $ncpus pbalign -j$ncpus $in $reference $out")
+        "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
     # TODO: need to "merge" within each condition
     for subreadsSet in subreadsSets:
         with pflow.context("movieName", movieName(subreadsSet)):
