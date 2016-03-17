@@ -1,7 +1,9 @@
 __all__ = [ "ConditionTable",
             "ResequencingConditionTable",
             "CoverageTitrationConditionTable",
-            "conditionTableForProtocol" ]
+            "conditionTableForWorkflow",
+            "TableValidationError",
+            "InputResolutionError" ]
 
 import pandas
 import os.path as op
@@ -34,7 +36,6 @@ class ConditionTable(object):
         except:
             raise InputValidationError("Input CSV file can't be read/parsed")
         self._validateTable()
-        self._inputsByCondition = None
         self._resolveInputs(resolver)
 
     def _validateTable(self):
@@ -136,6 +137,8 @@ class ConditionTable(object):
         assert len(vals) == 1
         return vals[0]
 
+    def inputs(self, condition):
+        return self._inputsByCondition[condition]
 
 class ResequencingConditionTable(ConditionTable):
     """
@@ -155,7 +158,10 @@ class ResequencingConditionTable(ConditionTable):
 
     def _resolveInputs(self, resolver):
         super(ResequencingConditionTable, self)._resolveInputs(resolver)
-        # more: resolve the reference
+        self._referenceByCondition = {}
+        for condition in self.conditions:
+            genome = self.genome(condition)
+            self._referenceByCondition[condition] = resolver.resolveReference(genome)
 
     @property
     def variables(self):
@@ -164,7 +170,6 @@ class ResequencingConditionTable(ConditionTable):
         variable in resequencing experiments
         """
         return [ "Genome" ] + self.pVariables
-
 
     def genome(self, condition):
         """
@@ -175,34 +180,36 @@ class ResequencingConditionTable(ConditionTable):
         assert len(genomes) == 1
         return genomes[0]
 
+    def reference(self, condition):
+        return self._referenceByCondition[condition]
+
 
 class CoverageTitrationConditionTable(ResequencingConditionTable):
-    """
-    `CoverageTitrationConditionTable` requires "Genome" values to be
-    recognized from a short list
-    """
-    def _validateNoUnrecognizedGenomes(self):
-        unrecognizedGenomes = set(self.df.Genome).difference(GENOMES)
-        if unrecognizedGenomes:
-            raise InputValidationError("Unsupported genome(s) for this protocol: " +
-                                       ", ".join(g for g in unrecognizedGenomes))
 
     def _validateAtLeastOnePVariable(self):
         if len(_DfHelpers.pVariables(self.df)) < 1:
             raise InputValidationError(
                 'There must be at least one covariate ("p_" variable) in the condition table')
 
-
     def _validateTable(self):
         super(CoverageTitrationConditionTable, self)._validateTable()
         self._validateNoUnrecognizedGenomes()
         self._validateAtLeastOnePVariable()
 
+    def referenceMask(self, condition):
+        return self._referenceMaskByCondition[condition]
 
     def _resolveInputs(self, requires):
         super(CoverageTitrationConditionTable, self)._resolveInputs()
-        # More: resolve the reference mask
+        self._referenceMaskByCondition = {}
+        for condition in self.conditions:
+            genome = self.genome(condition)
+            self._referenceMaskByCondition[condition] = resolver.resolveReferenceMask(genome)
 
 
-def conditionTableForProtocol(protocol, inputCsv, resolver):
-    raise NotImplementedError
+
+def conditionTableForWorkflow(protocol, inputCsv, resolver):
+    if protocol in [ "Mapping", "ChunkedMapping" ]:
+        return ResequencingConditionTable(inputCsv, resolver)
+    else:
+        raise NotImplementedError

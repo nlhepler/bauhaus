@@ -1,10 +1,27 @@
-import argparse
+import argparse, sys
+
+from bauhaus.experiment import conditionTableForWorkflow
+from bauhaus.pbls2 import Resolver
+from bauhaus.pflow import PFlow
+from bauhaus.workflows import availableWorkflows
 
 def doValidate(args):
-    raise NotImplementedError
+    try:
+        r = Resolver()
+        ct = conditionTableForWorkflow(args.workflow, args.conditionTable, r)
+        print "Validation and input resolution succeeded."
+        return ct
+    except Exception as e:
+        print "Error validating/resolving condition table: %s %s\n" % (type(e), e)
+        sys.exit(-1)
 
 def doGenerate(args):
-    raise NotImplementedError
+    ct = doValidate(args)
+    gen = availableWorkflows[args.workflow]
+    pflow = PFlow()
+    gen(pflow, ct)
+    pflow.write("build.ninja")
+    print "Workflow script written to build.ninja."
 
 def doRun(args):
     raise NotImplementedError
@@ -17,7 +34,7 @@ def parseArgs():
         required=True,
         type=str)
     parser.add_argument(
-        "--protocol", "-p",
+        "--workflow", "-w",
         action="store", type=str,
         required=True,
         choices = ["Mapping", "ChunkedMapping"])
@@ -32,7 +49,7 @@ def parseArgs():
 
 def main():
     args = parseArgs()
-    print args
+    #print args
     if args.command == "validate":
         doValidate(args)
     elif args.command == "generate":

@@ -55,7 +55,7 @@ class PFlow(ContextTracker):
     # ---- rules, build targets  -----
 
     def formatInContext(self, s):
-        if isinstance(s, str):
+        if isinstance(s, (str, unicode)):
             return s.format(**self.contextToDict())
         else:
             return s

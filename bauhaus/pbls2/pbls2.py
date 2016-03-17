@@ -1,5 +1,8 @@
 
-__all__ = [ "Resolver", "MockResolver" ]
+__all__ = [ "Resolver",
+            "MockResolver",
+            "ResolverFailure",
+            "DataNotFound" ]
 
 import requests, json, os.path as op, re
 from glob import glob
@@ -51,10 +54,15 @@ class Resolver(object):
         """
         Test connectivity to the services behind the resolver
         """
+        try:
+            r = requests.get("http://nibbler")
+            if not r.ok:
+                raise ResolverFailure("Nibbler unavailable?")
+        except requests.ConnectionError:
+                raise ResolverFailure("Nibbler unavailable?")
+
         if not op.exists(self.REFERENCES_ROOT):
             raise ResolverFailure("NFS unavailable?")
-        if not requests.get("http://nibbler").ok:
-            raise ResolverFailure("Nibbler unavailable?")
 
     def resolveRunCode(self, runCode):
         """
