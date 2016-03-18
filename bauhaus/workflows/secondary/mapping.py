@@ -66,30 +66,37 @@ def genSubreadsSetSplit(pflow, subreadsSet, splitFactor):
     return buildStmt.outputs
 
 
-def genAlignmentSetMerge(pflow, alignmentSets):
-    # MERGE entails the lightweight operation of merging the
-    # dataset XML files--BAM files not merged
-    pflow.genRuleOnce("mergeAlignmentSets",
-                      "$grid dataset merge $out $in")
-    outputs = [ "{condition}/mapping/{movieName}_preconsolidate.alignmentset.xml" ]
-    buildStmt = pflow.genBuildStatement(outputs,
-                                        "mergeAlignmentSets",
-                                        alignmentSets)
-    return buildStmt.outputs
-
-def genAlignmentSetConsolidate(pflow, alignmentSets):
+def genAlignmentSetConsolidateForMovie(pflow, alignmentSets):
     # CONSOLIDATE entails actually merging BAM files
     # We first need to run a MERGE.
-    mergedAlignmentSet = genAlignmentSetMerge(pflow, alignmentSets)[0]
-    pflow.genRuleOnce("consolidateAlignmentSets",
+    pflow.genRuleOnce("mergeAlignmentSetsForMovie",
+                      "$grid dataset merge $out $in")
+    outputs = [ "{condition}/mapping/{movieName}_preconsolidate.alignmentset.xml" ]
+    buildStmtMerge = pflow.genBuildStatement(outputs,
+                                        "mergeAlignmentSetsForMovie",
+                                        alignmentSets)
+
+    mergedAlignmentSet = buildStmtMerge.outputs[0]
+    pflow.genRuleOnce("consolidateAlignmentSetsForMovie",
                       "$grid dataset consolidate $in $out")
     consolidateAlignmentSet = "{condition}/mapping/{movieName}.alignmentset.xml"
     consolidatedBam = "{condition}/mapping/{movieName}.aligned_subreads.bam"
     outputs = [ consolidatedBam, consolidateAlignmentSet ]
-    buildStmt = pflow.genBuildStatement(outputs,
-                                        "consolidateAlignmentSets",
-                                        [mergedAlignmentSet])
-    return buildStmt.outputs[1]
+    buildStmtConsolidate = pflow.genBuildStatement(outputs,
+                                                   "consolidateAlignmentSetsForMovie",
+                                                   [mergedAlignmentSet])
+    return [ buildStmtConsolidate.outputs[1] ]
+
+
+def genAlignmentSetMergeForCondition(pflow, alignmentSets):
+    pflow.genRuleOnce("mergeAlignmentSetsForCondition",
+                      "$grid dataset merge $out $in")
+    outputs = [ "{condition}/mapping/all_movies.alignmentset.xml" ]
+    buildStmtMerge = pflow.genBuildStatement(outputs,
+                                             "mergeAlignmentSetsForCondition",
+                                             alignmentSets)
+    return buildStmtMerge.outputs
+
 
 # ----------- Mapping --------------------
 
@@ -104,14 +111,16 @@ def genMapping(pflow, subreadsSets, reference):
     mapRule = pflow.genRuleOnce(
         "map",
         "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
-    # TODO: these need to be "merged" within each condition
+    alignmentSets = []
     for subreadsSet in subreadsSets:
         with pflow.context("movieName", movieName(subreadsSet)):
             buildVariables = dict(reference=reference, ncpus=8)
-            pflow.genBuildStatement(["{condition}/mapping/{movieName}.alignmentset.xml"],
+            alignmentSets.extend(pflow.genBuildStatement(["{condition}/mapping/{movieName}.alignmentset.xml"],
                                     "map",
                                     [subreadsSet],
-                                    buildVariables)
+                                    buildVariables).outputs)
+    return genAlignmentSetMergeForCondition(pflow, alignmentSets)
+
 
 def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
     """
@@ -121,7 +130,7 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
     mapRule = pflow.genRuleOnce(
         "map",
         "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
-    # TODO: need to "merge" within each condition
+    alignmentSets = []
     for subreadsSet in subreadsSets:
         with pflow.context("movieName", movieName(subreadsSet)):
             alignmentSetChunks = []
@@ -135,8 +144,8 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
                         [subreadsSetChunk],
                         buildVariables)
                     alignmentSetChunks.extend(buildStmt.outputs)
-            genAlignmentSetConsolidate(pflow, alignmentSetChunks)
-
+            alignmentSets.extend(genAlignmentSetConsolidateForMovie(pflow, alignmentSetChunks))
+    return genAlignmentSetMergeForCondition(pflow, alignmentSets)
 
 
 # ---------- Workflows -------------

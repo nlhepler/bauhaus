@@ -49,7 +49,9 @@ def parseArgs():
         "--mockResolver", "-m",
         action="store_true",
         help="Use mock pbls2 resolver (for testing purposes)")
-
+    parser.add_argument(
+        "--pdb", action="store_true",
+        help="Drop into debugger on exception")
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
     validate = subparsers.add_parser("validate", help="Validate the condition table")
     generate = subparsers.add_parser("generate", help="Generate the ninja script to run the workflow")
@@ -58,8 +60,8 @@ def parseArgs():
     args = parser.parse_args()
     return args
 
-def main():
-    args = parseArgs()
+
+def _main(args):
     #print args
     if args.command == "validate":
         doValidate(args)
@@ -67,6 +69,21 @@ def main():
         doGenerate(args)
     elif args.command == "run":
         doRun(args)
+
+
+def main():
+    args = parseArgs()
+    if args.pdb:
+        try:
+            import ipdb
+            with ipdb.launch_ipdb_on_exception():
+                _main(args)
+            return 0
+        except ImportError:
+            _main(args)
+    else:
+        _main(args)
+
 
 if __name__ == '__main__':
     main()
