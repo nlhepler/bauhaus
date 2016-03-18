@@ -6,17 +6,13 @@ from bauhaus.pflow import PFlow
 from bauhaus.workflows import availableWorkflows
 
 def doValidate(args):
-    try:
-        if args.mockResolver:
-            r = MockResolver()
-        else:
-            r = Resolver()
-        ct = conditionTableForWorkflow(args.workflow, args.conditionTable, r)
-        print "Validation and input resolution succeeded."
-        return ct
-    except Exception as e:
-        print "Error validating/resolving condition table: %s %s\n" % (type(e), e)
-        sys.exit(-1)
+    if args.mockResolver:
+        r = MockResolver()
+    else:
+        r = Resolver()
+    ct = conditionTableForWorkflow(args.workflow, args.conditionTable, r)
+    print "Validation and input resolution succeeded."
+    return ct
 
 def doGenerate(args):
     ct = doValidate(args)
