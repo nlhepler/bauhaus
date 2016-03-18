@@ -149,23 +149,27 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
 
 
 # ---------- Workflows -------------
+# Unlike the generators above, these guys return a dict of Condition -> resolved outputs
+# These really ought to be codified using types.  Damn you Python.
+# TODO: do we consider these "tertiary"?
 
 def genMappingWorkflow(pflow, ct):
+    outputDict = {}
     for condition in ct.conditions:
         with pflow.context("condition", condition):
             subreadsSets = ct.inputs(condition)
             reference = ct.reference(condition)
-            genMapping(pflow, subreadsSets, reference)
-
+            outputDict[condition] = genMapping(pflow, subreadsSets, reference)
+    return outputDict
 
 def genChunkedMappingWorkflow(pflow, ct):
+    outputDict = {}
     for condition in ct.conditions:
         with pflow.context("condition", condition):
             subreadsSets = ct.inputs(condition)
             reference = ct.reference(condition)
-            genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8)
-
-
+            outputDict[condition] = genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8)
+    return outputDict
 
 
 # -------------------- Demo -------------------

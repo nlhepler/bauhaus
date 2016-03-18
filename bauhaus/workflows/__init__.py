@@ -2,4 +2,5 @@ from bauhaus.workflows.secondary import *
 
 availableWorkflows = \
     { "Mapping"       : genMappingWorkflow,
-      "ChunkedMapping": genChunkedMappingWorkflow }
+      "ChunkedMapping": genChunkedMappingWorkflow,
+      "VariantCalling": genVariantCallingWorkflow }

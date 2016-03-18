@@ -209,7 +209,7 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
 
 
 def conditionTableForWorkflow(protocol, inputCsv, resolver):
-    if protocol in [ "Mapping", "ChunkedMapping" ]:
+    if protocol in [ "Mapping", "ChunkedMapping", "VariantCalling" ]:
         return ResequencingConditionTable(inputCsv, resolver)
     else:
         raise NotImplementedError
