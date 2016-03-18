@@ -1,13 +1,16 @@
 import argparse, sys
 
 from bauhaus.experiment import conditionTableForWorkflow
-from bauhaus.pbls2 import Resolver
+from bauhaus.pbls2 import Resolver, MockResolver
 from bauhaus.pflow import PFlow
 from bauhaus.workflows import availableWorkflows
 
 def doValidate(args):
     try:
-        r = Resolver()
+        if args.mockResolver:
+            r = MockResolver()
+        else:
+            r = Resolver()
         ct = conditionTableForWorkflow(args.workflow, args.conditionTable, r)
         print "Validation and input resolution succeeded."
         return ct
@@ -42,6 +45,11 @@ def parseArgs():
         "--logDir", "-l",
         default="",
         action="store", type=str)
+    parser.add_argument(
+        "--mockResolver", "-m",
+        action="store_true",
+        help="Use mock pbls2 resolver (for testing purposes)")
+
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
     validate = subparsers.add_parser("validate", help="Validate the condition table")
     generate = subparsers.add_parser("generate", help="Generate the ninja script to run the workflow")

@@ -126,5 +126,26 @@ class Resolver(object):
 class MockResolver(object):
     # For testing purposes
 
+    REFERENCE_MASKS_ROOT = "/mnt/secondary/Share/VariantCalling/Quiver/GenomeMasks"
+    REFERENCES_ROOT = "/mnt/secondary/iSmrtanalysis/current/common/references"
+
     def __init__(self):
-        raise NotImplementedError
+        pass
+
+    def resolveSubreadsSet(self, runCode, reportsFolder=""):
+        if not _isRuncode(runCode):
+            raise ValueError('Argument "%s" does not appear to be a runcode' % runCode)
+        lookup = \
+            { "3150128-0001" : "/pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml" ,
+              "3150128-0002" : "/pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml" ,
+              "3150122-0001" : "/pbi/collections/315/3150122/r54011_20160305_235615/1_A01/m54011_160305_235923.subreadset.xml" ,
+              "3150122-0002" : "/pbi/collections/315/3150122/r54011_20160305_235615/2_B01/m54011_160306_050740.subreadset.xml" }
+        if runCode not in lookup or reportsFolder != "":
+            raise DataNotFound(runCode)
+        return lookup[runCode]
+
+    def resolveReference(self, referenceName):
+        if referenceName not in ["lambdaNEB", "ecoliK12_pbi_March2013"]:
+            raise DataNotFound("Reference not found: %s" % referenceName)
+        referenceFasta = op.join(self.REFERENCES_ROOT, referenceName, "sequence", referenceName + ".fasta")
+        return referenceFasta
