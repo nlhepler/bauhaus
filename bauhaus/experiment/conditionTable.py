@@ -193,14 +193,13 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
 
     def _validateTable(self):
         super(CoverageTitrationConditionTable, self)._validateTable()
-        self._validateNoUnrecognizedGenomes()
-        self._validateAtLeastOnePVariable()
+        #self._validateAtLeastOnePVariable()
 
     def referenceMask(self, condition):
         return self._referenceMaskByCondition[condition]
 
-    def _resolveInputs(self, requires):
-        super(CoverageTitrationConditionTable, self)._resolveInputs()
+    def _resolveInputs(self, resolver):
+        super(CoverageTitrationConditionTable, self)._resolveInputs(resolver)
         self._referenceMaskByCondition = {}
         for condition in self.conditions:
             genome = self.genome(condition)
@@ -211,5 +210,7 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
 def conditionTableForWorkflow(protocol, inputCsv, resolver):
     if protocol in [ "Mapping", "ChunkedMapping", "VariantCalling" ]:
         return ResequencingConditionTable(inputCsv, resolver)
+    elif protocol in [ "CoverageTitration" ]:
+        return CoverageTitrationConditionTable(inputCsv, resolver)
     else:
         raise NotImplementedError

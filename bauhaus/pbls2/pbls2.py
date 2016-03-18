@@ -103,10 +103,10 @@ class Resolver(object):
             raise DataNotFound(referenceName)
 
     def resolveReferenceMask(self, referenceName):
-        maskGff = op.join(REFERENCES_MASKS_ROOT, referenceName + "-mask.gff")
+        maskGff = op.join(self.REFERENCES_MASKS_ROOT, referenceName + "-mask.gff")
         if op.isfile(maskGff):
             return maskGff
-        elif not op.exists(REFERENCE_MASKS_ROOT):
+        elif not op.exists(self.REFERENCES_MASKS_ROOT):
             raise ResolverFailure("NFS unavailable?")
         else:
             raise DataNotFound("missing mask for " + referenceName)
@@ -126,7 +126,7 @@ class Resolver(object):
 class MockResolver(object):
     # For testing purposes
 
-    REFERENCE_MASKS_ROOT = "/mnt/secondary/Share/VariantCalling/Quiver/GenomeMasks"
+    REFERENCES_MASKS_ROOT = "/mnt/secondary/Share/VariantCalling/Quiver/GenomeMasks"
     REFERENCES_ROOT = "/mnt/secondary/iSmrtanalysis/current/common/references"
 
     def __init__(self):
@@ -149,3 +149,8 @@ class MockResolver(object):
             raise DataNotFound("Reference not found: %s" % referenceName)
         referenceFasta = op.join(self.REFERENCES_ROOT, referenceName, "sequence", referenceName + ".fasta")
         return referenceFasta
+
+    def resolveReferenceMask(self, referenceName):
+        if referenceName not in ["lambdaNEB", "ecoliK12_pbi_March2013"]:
+            raise DataNotFound("Reference mask not found: %s" % referenceName)
+        maskGff = op.join(self.REFERENCES_MASKS_ROOT, referenceName + "-mask.gff")
