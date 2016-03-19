@@ -1,9 +1,9 @@
 * DONE Make CT for lambda + ecoli (4 runs)
 * DONE Build out mock resolver
 * DONE Mapping: Add final "merge" step within each condition (-> all_movies.alignmentset.xml)
-* TODO Make variant calling wf
-* TODO Make coverate titration 1 wf
-* TODO Make coverate titration * wf
+* DONE Make variant calling wf
+* DONE Make coverate titration 1 wf
+* DONE Make coverate titration * wf
 * TODO Add some lil test cases
 * TODO Update readme
 * TODO Add logo
