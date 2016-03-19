@@ -1,9 +1,16 @@
-import argparse, sys
+import argparse, sys, os, os.path as op
 
 from bauhaus.experiment import conditionTableForWorkflow
 from bauhaus.pbls2 import Resolver, MockResolver
 from bauhaus.pflow import PFlow
 from bauhaus.workflows import availableWorkflows
+
+def mkdirp(path):
+    try:
+        os.makedirs(path)
+    except OSError:
+        # "path already exists", presumably... should verify
+        pass
 
 def doValidate(args):
     if args.mockResolver:
@@ -31,7 +38,7 @@ def parseArgs():
         "--conditionTable", "-t",
         action="store", metavar="CONDITION_TABLE.CSV",
         required=True,
-        type=str)
+        type=op.abspath)
     parser.add_argument(
         "--workflow", "-w",
         action="store", type=str,
@@ -40,7 +47,7 @@ def parseArgs():
     parser.add_argument(
         "--logDir", "-l",
         default="",
-        action="store", type=str)
+        action="store", type=op.abspath)
     parser.add_argument(
         "--mockResolver", "-m",
         action="store_true",
@@ -48,6 +55,10 @@ def parseArgs():
     parser.add_argument(
         "--pdb", action="store_true",
         help="Drop into debugger on exception")
+    parser.add_argument(
+        "--outputDirectory", "-o",
+        action="store", type=str)
+
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
     validate = subparsers.add_parser("validate", help="Validate the condition table")
     generate = subparsers.add_parser("generate", help="Generate the ninja script to run the workflow")
@@ -59,9 +70,16 @@ def parseArgs():
 
 def _main(args):
     #print args
+
     if args.command == "validate":
         doValidate(args)
-    elif args.command == "generate":
+        return
+
+    if args.outputDirectory is not None:
+        mkdirp(args.outputDirectory)
+        os.chdir(args.outputDirectory)
+
+    if args.command == "generate":
         doGenerate(args)
     elif args.command == "run":
         doRun(args)

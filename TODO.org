@@ -4,6 +4,11 @@
 * DONE Make variant calling wf
 * DONE Make coverate titration 1 wf
 * DONE Make coverate titration * wf
+* DONE Configurable output directory
+
+* TODO Generate a run script
+* TODO Add coverage titration plots
+
 * TODO Add some lil test cases
 * TODO Update readme
 * TODO Add logo
