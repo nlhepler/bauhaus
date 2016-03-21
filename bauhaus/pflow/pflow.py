@@ -1,6 +1,9 @@
+from bauhaus.scripts import getScriptPath
+from bauhaus.utils import mkdirp
+
 from collections import OrderedDict, namedtuple
 from contextlib import closing, contextmanager
-import ninja, os.path as op
+import ninja, shutil, os.path as op
 
 Rule           = namedtuple("Rule", ("name", "command"))
 BuildStatement = namedtuple("BuildStatement", ("outputs", "rule", "inputs", "variables"))
@@ -52,6 +55,14 @@ class PFlow(ContextTracker):
         self._rules = OrderedDict()
         self._buildStmts = []
         self._logDir = logDir
+        self._scriptsToBundle = {}
+        self.bundleScript("run.sh")
+
+
+    # ----- script bundling ---------
+
+    def bundleScript(self, scriptName, substitutions=dict()):
+        self._scriptsToBundle[scriptName] = getScriptPath(scriptName)
 
     # ---- rules, build targets  -----
 
@@ -108,3 +119,8 @@ class PFlow(ContextTracker):
                 w.build(buildStmt.outputs, buildStmt.rule, buildStmt.inputs,
                         variables=buildStmt.variables)
                 w.newline()
+        # Bundle the scripts
+        for (scriptName, scriptSrcPath) in self._scriptsToBundle.iteritems():
+            scriptDestPath = scriptName
+            mkdirp(op.dirname(scriptDestPath))
+            shutil.copy(scriptSrcPath, scriptDestPath)

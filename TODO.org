@@ -6,8 +6,13 @@
 * DONE Make coverate titration * wf
 * DONE Configurable output directory
 
+
 * TODO Generate a run script
+* TODO Mask the variants output
 * TODO Add coverage titration plots
+
+* TODO Try running
+
 
 * TODO Add some lil test cases
 * TODO Update readme

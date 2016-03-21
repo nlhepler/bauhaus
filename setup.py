@@ -12,20 +12,16 @@ globals = {}
 execfile("bauhaus/__init__.py", globals)
 __VERSION__ = globals["__VERSION__"]
 
-
 def _get_local_file(file_name):
     return os.path.join(os.path.dirname(__file__), file_name)
-
 
 def _get_requirements(file_name):
     with open(file_name, 'r') as f:
         reqs = [line for line in f if not line.startswith("#")]
     return reqs
 
-
 def _get_local_requirements(file_name):
     return _get_requirements(_get_local_file(file_name))
-
 
 setup(
     name = "bauhaus",
@@ -39,5 +35,7 @@ setup(
     entry_points = {
         "console_scripts" : [ "bauhaus = bauhaus.main:main" ]
     },
+    package_data={ "bauhaus.scripts" : [ "*.sh",
+                                         "R/*.R" ] },
     install_requires=_get_local_requirements(REQUIREMENTS_TXT)
 )

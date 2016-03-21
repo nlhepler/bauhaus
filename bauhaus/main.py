@@ -4,13 +4,7 @@ from bauhaus.experiment import conditionTableForWorkflow
 from bauhaus.pbls2 import Resolver, MockResolver
 from bauhaus.pflow import PFlow
 from bauhaus.workflows import availableWorkflows
-
-def mkdirp(path):
-    try:
-        os.makedirs(path)
-    except OSError:
-        # "path already exists", presumably... should verify
-        pass
+from bauhaus.utils import mkdirp
 
 def doValidate(args):
     if args.mockResolver:
