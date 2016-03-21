@@ -153,4 +153,4 @@ class MockResolver(object):
     def resolveReferenceMask(self, referenceName):
         if referenceName not in ["lambdaNEB", "ecoliK12_pbi_March2013"]:
             raise DataNotFound("Reference mask not found: %s" % referenceName)
-        maskGff = op.join(self.REFERENCES_MASKS_ROOT, referenceName + "-mask.gff")
+        return op.join(self.REFERENCES_MASKS_ROOT, referenceName + "-mask.gff")

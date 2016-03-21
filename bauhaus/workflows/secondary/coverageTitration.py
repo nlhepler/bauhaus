@@ -1,4 +1,4 @@
-from .variantCalling import genUnfilteredVariantCalling, genCoverageSummary
+from .variantCalling import genVariantCalling, genCoverageSummary
 from .mapping import genChunkedMappingWorkflow
 
 from collections import defaultdict
@@ -17,12 +17,14 @@ def genCoverageTitrationWorkflow(pflow, ct, algorithm="arrow"):
     for (condition, alignmentSets) in mapping.iteritems():
         alignmentSet = alignmentSets[0]
         reference = ct.reference(condition)
+        referenceMask = ct.referenceMask(condition)
         with pflow.context("condition", condition):
             coverageSummary = genCoverageSummary(pflow, alignmentSet, reference)[0]
             outputDict[condition].append(coverageSummary)
             for x in COVERAGE_LEVELS:
                 outputDict[condition].append(
-                    genUnfilteredVariantCalling(pflow, alignmentSet, reference,
-                                                algorithm=algorithm,
-                                                coverageLimit=x))
+                    genVariantCalling(pflow, alignmentSet, reference,
+                                      referenceMask=referenceMask,
+                                      algorithm=algorithm,
+                                      coverageLimit=x))
     return outputDict
