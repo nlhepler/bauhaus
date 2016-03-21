@@ -37,6 +37,16 @@ def genUnfilteredVariantCalling(pflow, alignedSubreadsSet, reference, algorithm=
              coverageLimitArgument=coverageLimitArgument))
     return bs.outputs
 
+def genCoverageSummary(pflow, alignmentSet, reference):
+    pflow.genRuleOnce(
+        "summarize_coverage",
+        "$grid python -m pbreports.report.summarize_coverage.summarize_coverage $in $reference $out")
+    bs = pflow.genBuildStatement(
+        ["{condition}/variant_calling/alignments_summary.gff"],
+        "summarize_coverage",
+        [alignmentSet],
+        dict(reference=reference))
+    return bs.outputs
 
 def genVariantCallingWorkflow(pflow, ct):
     """
