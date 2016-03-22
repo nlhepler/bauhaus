@@ -44,7 +44,7 @@ def genVariantCalling(pflow, alignedSubreadsSet, reference,
     if referenceMask is not None:
         maskRule = pflow.genRuleOnce(
             "maskVariantsGff",
-            "gffsubtract.pl $in $referenceMask $out")
+            "gffsubtract.pl $in $referenceMask > $out")
         # overwrite bs
         bs = pflow.genBuildStatement(
             [MASKED_VARIANTS_GFF], "maskVariantsGff", [VARIANTS_GFF],
