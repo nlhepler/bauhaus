@@ -36,7 +36,8 @@ def genVariantCalling(pflow, alignedSubreadsSet, reference,
         [VARIANTS_GFF],
         "variantCalling",
         [alignedSubreadsSet],
-        dict(consensusFasta=CONSENSUS_FASTA,
+        dict(reference=reference,
+             consensusFasta=CONSENSUS_FASTA,
              consensusFastq=CONSENSUS_FASTQ,
              coverageLimitArgument=coverageLimitArgument))
 
