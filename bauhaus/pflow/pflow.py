@@ -55,7 +55,6 @@ class PFlow(ContextTracker):
         super(PFlow, self).__init__()
         self._rules = OrderedDict()
         self._buildStmts = []
-        self._logDir = logDir
         self._scriptsToBundle = {}
         self.bundleScript("run.sh")
 
@@ -103,9 +102,8 @@ class PFlow(ContextTracker):
         with closing(ninja.Writer(f)) as w:
             w.comment("Variables")
             w.newline()
-            w.variable("logdir", self._logDir)
             w.variable("ncpus", "8")
-            w.variable("grid", "qsub -sync y -cwd -V -b y -e $logdir -o $logdir")
+            w.variable("grid", "qsub -sync y -cwd -V -b y -e log -o log")
             w.variable("gridSMP", "$grid -pe smp")
             w.newline()
             w.comment("Rules")

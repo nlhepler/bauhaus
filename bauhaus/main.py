@@ -18,7 +18,7 @@ def doValidate(args):
 def doGenerate(args):
     ct = doValidate(args)
     gen = availableWorkflows[args.workflow]
-    pflow = PFlow(logDir=args.logDir)
+    pflow = PFlow()
     gen(pflow, ct)
     pflow.write("build.ninja")
     print "Workflow script written to build.ninja."
@@ -39,10 +39,6 @@ def parseArgs():
         required=True,
         choices = availableWorkflows.keys())
     parser.add_argument(
-        "--logDir", "-l",
-        default="",
-        action="store", type=op.abspath)
-    parser.add_argument(
         "--mockResolver", "-m",
         action="store_true",
         help="Use mock pbls2 resolver (for testing purposes)")
@@ -51,6 +47,7 @@ def parseArgs():
         help="Drop into debugger on exception")
     parser.add_argument(
         "--outputDirectory", "-o",
+        default="out",
         action="store", type=str)
 
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
@@ -72,6 +69,7 @@ def _main(args):
     if args.outputDirectory is not None:
         mkdirp(args.outputDirectory)
         os.chdir(args.outputDirectory)
+        mkdirp("log")
 
     if args.command == "generate":
         doGenerate(args)
