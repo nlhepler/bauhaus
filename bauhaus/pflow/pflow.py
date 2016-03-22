@@ -1,9 +1,10 @@
 from bauhaus.scripts import getScriptPath
-from bauhaus.utils import mkdirp
+from bauhaus.utils import mkdirp, chmodPlusX
 
 from collections import OrderedDict, namedtuple
 from contextlib import closing, contextmanager
 import ninja, shutil, os.path as op
+
 
 Rule           = namedtuple("Rule", ("name", "command"))
 BuildStatement = namedtuple("BuildStatement", ("outputs", "rule", "inputs", "variables"))
@@ -124,3 +125,4 @@ class PFlow(ContextTracker):
             scriptDestPath = scriptName
             mkdirp(op.dirname(scriptDestPath))
             shutil.copy(scriptSrcPath, scriptDestPath)
+            chmodPlusX(scriptDestPath)

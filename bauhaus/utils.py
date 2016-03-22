@@ -1,4 +1,4 @@
-import os
+import os, stat
 
 def mkdirp(path):
     try:
@@ -6,3 +6,8 @@ def mkdirp(path):
     except OSError:
         # "path already exists", presumably... should verify
         pass
+
+
+def chmodPlusX(path):
+    originalStat = os.stat(path).st_mode
+    os.chmod(path, originalStat | stat.S_IXUSR)
