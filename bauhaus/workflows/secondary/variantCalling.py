@@ -55,7 +55,7 @@ def genVariantCalling(pflow, alignedSubreadsSet, reference,
 def genCoverageSummary(pflow, alignmentSet, reference):
     pflow.genRuleOnce(
         "summarize_coverage",
-        "$grid python -m pbreports.report.summarize_coverage.summarize_coverage $in $reference $out")
+        "$grid python -m pbreports.report.summarize_coverage.summarize_coverage --region_size=10000 $in $reference $out")
     bs = pflow.genBuildStatement(
         ["{condition}/variant_calling/alignments_summary.gff"],
         "summarize_coverage",
