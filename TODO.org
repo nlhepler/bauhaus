@@ -8,12 +8,12 @@
 * DONE Generate a run script
 * DONE Add coverage titration plots
 
+* DONE Mask the variants output
+* DONE Make the coverage summary
+* DONE Add a lil lambda mask
+* DONE Copy the condition table to a nominal place in the output dir
 
-* TODO Mask the variants output
-* TODO Make the coverage summary
-* TODO Add a lil lambda mask
 * TODO Run the plots
-* TODO Try running
 
 
 * TODO Add some lil test cases
