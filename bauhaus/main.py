@@ -1,4 +1,4 @@
-import argparse, sys, os, os.path as op
+import argparse, shutil, sys, os, os.path as op
 
 from bauhaus.experiment import conditionTableForWorkflow
 from bauhaus.pbls2 import Resolver, MockResolver
@@ -66,10 +66,11 @@ def _main(args):
         doValidate(args)
         return
 
-    if args.outputDirectory is not None:
-        mkdirp(args.outputDirectory)
-        os.chdir(args.outputDirectory)
-        mkdirp("log")
+    mkdirp(args.outputDirectory)
+    shutil.copyfile(args.conditionTable, op.join(args.outputDirectory, "condition-table.csv"))
+    os.chdir(args.outputDirectory)
+    mkdirp("log")
+
 
     if args.command == "generate":
         doGenerate(args)
