@@ -191,12 +191,32 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
             raise InputValidationError(
                 'There must be at least one covariate ("p_" variable) in the condition table')
 
+    def _validateConsensusAlgorithm(self):
+        if "ConsensusAlgorithm" in self.variables:
+            unrecognizedAlgos = set(self.df.ConsensusAlgorithm).difference(["poa", "quiver", "arrow"])
+            if unrecognizedAlgos:
+                raise InputValidationError(
+                    "Unrecognized consensus algorithm(s): " + ", ".join(map(str, unrecognizedAlgos)))
+
+    @property
+    def variables(self):
+        baseVars = super(CoverageTitrationConditionTable, self).variables
+        if "ConsensusAlgorithm" in self.df.columns:
+            return [ "ConsensusAlgorithm" ] + baseVars
+
     def _validateTable(self):
         super(CoverageTitrationConditionTable, self)._validateTable()
         #self._validateAtLeastOnePVariable()
+        self._validateConsensusAlgorithm()
 
     def referenceMask(self, condition):
         return self._referenceMaskByCondition[condition]
+
+    def consensusAlgorithm(self, condition):
+        if "ConsensusAlgorithm" not in self.variables:
+            return "arrow"
+        else:
+            return self.condition(condition).ConsensusAlgorithm.iloc[0]
 
     def _resolveInputs(self, resolver):
         super(CoverageTitrationConditionTable, self)._resolveInputs(resolver)
