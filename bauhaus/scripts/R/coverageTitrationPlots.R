@@ -223,13 +223,16 @@ doResidualErrorsPlot <- function(tbl)
 
 main <- function()
 {
-    ##args <- commandArgs(TRUE)
-    ##wfRootDir <- read.csv(args[1])
-    wfRootDir <- "/home/UNIXHOME/dalexander/Projects/rsync/bauhaus/CT1"
+    args <- commandArgs(TRUE)
+    wfRootDir <- args[1]
+    ##wfRootDir <- "/home/UNIXHOME/dalexander/Projects/rsync/bauhaus/CT1"
     tbl <- makeCoverageTitrationTable(wfRootDir)
-    #print(tbl)
 
-    pdf("summary.pdf", 11, 8.5)
+    ## Dump the ctt table
+    write.csv(tbl, file="coverage-titration.csv")
+
+    ## Generate plot
+    pdf("coverage-titration.pdf", 11, 8.5)
     doTitrationPlots(tbl)
     doCoverageDiagnosticsPlot(tbl)
     doResidualErrorsPlot(tbl)
