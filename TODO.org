@@ -21,3 +21,42 @@
 
 
 * TODO Look into managing R dependencies using packrat so we're not at the mercy of what's on the cluster
+
+
+* TODO Long-term: separate input table and secondary analysis options table
+
+  Current picture:
+  | Condition   |      RunCode | ReportsFolder | Genome                 | ConsensusAlgorithm |
+  |-------------+--------------+---------------+------------------------+--------------------|
+  | Ecoli_poa   | 3150122-0001 |               | ecoliK12_pbi_March2013 | poa                |
+  | Ecoli_poa   | 3150122-0002 |               | ecoliK12_pbi_March2013 | poa                |
+  | Ecoli_arrow | 3150122-0001 |               | ecoliK12_pbi_March2013 | arrow              |
+  | Ecoli_arrow | 3150122-0002 |               | ecoliK12_pbi_March2013 | arrow              |
+
+
+  Immediate problem: in the current system, redundant mappings will
+  get run
+
+  The broader problem is that secondary analysis options are getting
+  conflated with the input specification.  So for example we have to
+  needlessly duplicate the "ConsensusAlgorithm" column entries for all
+  inputs in the condition.
+
+  Cleaner, more powerful:
+
+  Input table:
+  | Condition   |      RunCode | ReportsFolder |
+  |-------------+--------------+---------------|
+  | Ecoli_poa   | 3150122-0001 |               |
+  | Ecoli_poa   | 3150122-0002 |               |
+  | Ecoli_arrow | 3150122-0001 |               |
+  | Ecoli_arrow | 3150122-0002 |               |
+
+
+  Secondary analysis table:
+  | Condition   | Genome                 | ConsensusAlgorithm |
+  |-------------+------------------------+--------------------|
+  | Ecoli_poa   | ecoliK12_pbi_March2013 | poa                |
+  | Ecoli_arrow | ecoliK12_pbi_March2013 | arrow              |
+
+  Can imagine encoding much more than just this---secondary analysis version, etc.
