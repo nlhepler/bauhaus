@@ -70,18 +70,29 @@
 
 *** Variables
     Usually an experiment seeks to determine the effect of one or more
-    variables on some outcome measure.  The user can encode variables
+    variables on some outcome measure.  Variables can be used by the
+    tertiary analysis engine to show plots that are
+    faceted/conditioned by one ore more variable, making it possible
+    to see the variable effect.  The user can encode variables as
+    follows.
 
-    *Explicit variables* can be specified by using column names that begin
-    with "p_".
+    *Explicit variables* can be specified, arbitrarily, by using
+    column names that begin with "p_".  *Implicit variables* do not
+    have a "p_" prefix; for one reason or another, the implicit
+    variables have significance to the workflow engine, they are not
+    treated as simply as something to facet/condition on in plots.  At
+    present, the only implicit variables are as follows:
 
-    Resequencing-based analyses require a "Genome" column to indicate the
-    reference sequence that should be used.  "Genome" is considered an
-    *implicit variable*.
+      - The mandatory column "Genome" in resequencing-based workflows
+        is used to identify the mapping reference to use.
 
-    Variables can be used by the tertiary analysis engine to show plots
-    that are faceted/conditioned by one ore more variable, making it
-    possible to see the variable effect.
+      - The optional column "ConsensusAlgorithm" in the coverage
+        titration workflow can be used to select a consensus algorithm
+        from ={arrow, quiver, poa}= to be run by the workflow.
+
+    To restate: these implicit variables inform the logic in the
+    workflow execution and are also available for
+    conditioning/faceting in final tertiary analysis plots.
 
     *Variables must have a single value within a condition.  Inputs with
     different variable values are not exchangeable, so we disallow
