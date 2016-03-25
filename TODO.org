@@ -15,7 +15,9 @@
 
 * TODO Run the plots
 
-
 * TODO Add some lil test cases
 * TODO Update readme
 * TODO Add logo
+
+
+* TODO Look into managing R dependencies using packrat so we're not at the mercy of what's on the cluster

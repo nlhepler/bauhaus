@@ -23,19 +23,21 @@ getConditionTable <- function(wfOutputRoot)
 variableNames <- function(ct)
 {
     nms <- names(ct)
-    matches <- str_detect(nms, "(Genome)|(p_.*)")
+    matches <- str_detect(nms, "(Algorithm)|(Genome)|(p_.*)")
     nms[matches]
 }
     
-makeCoverageTitrationTable1 <- function(wfOutputRoot, conditionName)
+makeCoverageTitrationTable1 <- function(maskedVariantsDir)
 {
     ##
     ## Get the precomputed masked files, which we expect to find as
-    ##   {worfklowOutputRoot}/{condition}/variant_calling/masked-variants-{coverage}.gff
+    ##   {worfklowOutputRoot}/{condition}/variant_calling/{algo}/masked-variants-{coverage}.gff
     ##
-    alnSummary <- file.path(wfOutputRoot, conditionName, "variant_calling/alignments_summary.gff")
-    mvs <- Sys.glob(file.path(wfOutputRoot, conditionName, "variant_calling/masked-variants-*.gff"))
-
+    alnSummary <- file.path(maskedVariantsDir, "../alignments_summary.gff")
+    mvs <- Sys.glob(file.path(maskedVariantsDir, "masked-variants-*.gff"))
+    
+    algo <- basename(maskedVariantsDir)
+    condition <- basename(dirname(dirname(maskedVariantsDir)))
     coverageFromPath   <- function(path) as.integer(str_match(path, ".*/masked-variants-(.*)\\.gff")[,2])
 
     variantsCount.fast <- function(fname) {
@@ -73,10 +75,10 @@ makeCoverageTitrationTable1 <- function(wfOutputRoot, conditionName)
         MaskedVariantsFile  = mvs,
         Coverage            = coverageFromPath(mvs),
         AvailableCoverage   = q01Coverage,
-        Condition           = conditionName,
+        Condition           = condition,
         NumVariants         = sapply(mvs, variantsCount.fast),
         ConcordanceQV       = concordanceQV,
-        Algorithm           = "unknown")  ## TODO
+        Algorithm           = algo)
 
     ctt$ShouldCensor = (ctt$Coverage > ctt$AvailableCoverage)
     ctt
@@ -85,7 +87,11 @@ makeCoverageTitrationTable1 <- function(wfOutputRoot, conditionName)
 makeCoverageTitrationTable <- function(wfOutputRoot)
 {
     ct <- getConditionTable(wfOutputRoot)
-    rawCtt <- ldply(unique(ct$Condition),  function(c) { makeCoverageTitrationTable1(wfOutputRoot, c) })
+    
+    ## dig around the wf output to find masked-variants files.
+    mvDirs <- Sys.glob(file.path(wfOutputRoot, "*/variant_calling/*/"))
+
+    rawCtt <- ldply(mvDirs,  function(d) { makeCoverageTitrationTable1(d) })
      
     ## Get the table of just the conditions and associated variables---no runcodes/other inputs
     ## Is this a concept that is more broadly useful?
@@ -98,14 +104,14 @@ makeCoverageTitrationTable <- function(wfOutputRoot)
 
 doTitrationPlots <- function(tbl)
 {
-    tbl <- tbl[tbl$ShouldCensor==F,]
+    tbl <- tbl[!tbl$ShouldCensor,]
 
     ## Implicit variables: Genome, Algorithm
     ## Explicit variables: have the "p_" prefix
     variables <- names(tbl)[grep("^p_|^Genome$|^Algorithm$", names(tbl))]
     stopifnot(length(variables) %in% c(1,2,3,4))
 
-    print(ggplot(tbl, aes(x=Coverage, y=ConcordanceQV, color=Condition:Algorithm)) +
+    print(ggplot(tbl, aes(x=Coverage, y=ConcordanceQV, color=Condition)) +
           geom_line() +
           scale_y_continuous("Concordance (QV)") +
           #scale_color_manual(values = extras$colors) +
@@ -114,7 +120,7 @@ doTitrationPlots <- function(tbl)
     # Facet on individual variables
     for (v in variables) {
         print(
-            ggplot(tbl, aes(x=Coverage, y=ConcordanceQV, color=Condition:Algorithm)) +
+            ggplot(tbl, aes(x=Coverage, y=ConcordanceQV, color=Condition)) +
             geom_line() +
             facet_grid(paste(".~", v)) +
             scale_y_continuous("Concordance (QV)") +
@@ -129,7 +135,7 @@ doTitrationPlots <- function(tbl)
             function(twoVars)
             {
               ignore <- print(
-                ggplot(tbl, aes_string(x="Coverage", y="ConcordanceQV", color=twoVars[2], group="Condition:Algorithm")) +
+                ggplot(tbl, aes_string(x="Coverage", y="ConcordanceQV", color=twoVars[2], group="Condition")) +
                   geom_line() +
                   facet_grid(paste(".~", twoVars[1])) +
                   scale_y_continuous("Concordance (QV)") +
@@ -146,7 +152,7 @@ doTitrationPlots <- function(tbl)
             function(twoVars)
             {
               print(
-                ggplot(tbl, aes_string(x="Coverage", y="ConcordanceQV", color=twoVars[3], group="Condition:Algorithm")) +
+                ggplot(tbl, aes_string(x="Coverage", y="ConcordanceQV", color=twoVars[3], group="Condition")) +
                   geom_line() +
                   facet_grid(paste(twoVars[1], "~", twoVars[2])) +
                   scale_y_continuous("Concordance (QV)") +
@@ -169,7 +175,7 @@ doCoverageDiagnosticsPlot <- function(tbl)
 doResidualErrorsPlot <- function(tbl)
 {
     ## Plots of residual error modes
-    tbl <- tbl[tbl$ShouldCensor=="False",]
+    tbl <- tbl[!tbl$ShouldCensor,]
 
     summarizedResidualErrors <- function(variantsGffFile) {
         print(variantsGffFile)
@@ -197,7 +203,12 @@ doResidualErrorsPlot <- function(tbl)
                                 res <- summarizedResidualErrors(as.character(df$MaskedVariantsFile))
                              })
   
-      plt <- qplot(ErrorMode, Freq, geom="bar", stat="identity", fill=Base, data=varTypeCounts)
+      ## This plot works with the old ggplot we have installed on the cluster
+      ##plt <- qplot(ErrorMode, Freq, geom="bar", stat="identity", fill=Base, data=varTypeCounts)
+      
+      ## This works with the new
+      plt <- ggplot(data=varTypeCounts, mapping=aes(x=ErrorMode, y=Freq, fill=Base)) + geom_bar(stat="identity")
+      
       facet.formula <- as.formula(paste(paste(variables, collapse="*"), "~Genome*Coverage"))
       plt.fix_y  <- (plt + facet_grid(facet.formula) 
                      +  ggtitle(sprintf("Residual errors in %s consensus sequence (fixed y-axis)", algorithm)))
@@ -209,42 +220,20 @@ doResidualErrorsPlot <- function(tbl)
     }
 }
 
-grok <- function(tbl)
-{
-    ## HACKY
-    ## Grok the SNR into factor levels.
-
-    ## If there is an SNR variable, assume the format <min>-<max> for each.
-    ## Long-term would be nice to have the extra params as an actual class
-    ## object with some notion of the type of param it is.
-    variables <- names(tbl)[grep("^p_", names(tbl))]
-    varsSNR <- variables[grep("*[sS][nN][rR]*", variables)]
-    for (v in varsSNR) {
-        snrRange <- str_extract_all(tbl[,v], "[0-9]+")
-        minSNR <- min(as.numeric(unlist(snrRange)))
-        maxSNR <- max(as.numeric(unlist(snrRange)))
-        interSNR <- sapply(snrRange, function(s) {
-            minV <- min(as.numeric(s))
-            minV + 0.1
-        })
-        snrCuts <- cut(interSNR, breaks=sort(unique(as.numeric(unlist(snrRange)))))
-        tbl[,v] <- snrCuts
-    }
-    tbl
-}
 
 main <- function()
 {
-    args <- commandArgs(TRUE)
-    tbl <- grok(read.csv(args[1]))
-    #tbl <- grok(read.csv("summary.csv"))
-    
+    ##args <- commandArgs(TRUE)
+    ##wfRootDir <- read.csv(args[1])
+    wfRootDir <- "/home/UNIXHOME/dalexander/Projects/rsync/bauhaus/CT1"
+    tbl <- makeCoverageTitrationTable(wfRootDir)
     #print(tbl)
 
     pdf("summary.pdf", 11, 8.5)
     doTitrationPlots(tbl)
     doCoverageDiagnosticsPlot(tbl)
     doResidualErrorsPlot(tbl)
+    dev.off()
 }
 
 
