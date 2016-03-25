@@ -15,16 +15,16 @@ def genVariantCalling(pflow, alignedSubreadsSet, reference,
     TODO: do we like handling coverageLimit this way, or do we want to leverage PFLow context mechanism?
     """
     if coverageLimit is None:
-        CONSENSUS_FASTA       = "{condition}/variant_calling/consensus.fasta"
-        CONSENSUS_FASTQ       = "{condition}/variant_calling/consensus.fastq"
-        VARIANTS_GFF          = "{condition}/variant_calling/variants.gff"
-        MASKED_VARIANTS_GFF   = "{condition}/variant_calling/masked-variants.gff"
+        CONSENSUS_FASTA       = "{condition}/variant_calling/%s/consensus.fasta"        % algorithm
+        CONSENSUS_FASTQ       = "{condition}/variant_calling/%s/consensus.fastq"        % algorithm
+        VARIANTS_GFF          = "{condition}/variant_calling/%s/variants.gff"           % algorithm
+        MASKED_VARIANTS_GFF   = "{condition}/variant_calling/%s/masked-variants.gff"    % algorithm
         coverageLimitArgument = ""
     else:
-        CONSENSUS_FASTA       = "{condition}/variant_calling/consensus-%d.fasta"     % coverageLimit
-        CONSENSUS_FASTQ       = "{condition}/variant_calling/consensus-%d.fastq"     % coverageLimit
-        VARIANTS_GFF          = "{condition}/variant_calling/variants-%d.gff"        % coverageLimit
-        MASKED_VARIANTS_GFF   = "{condition}/variant_calling/masked-variants-%d.gff" % coverageLimit
+        CONSENSUS_FASTA       = "{condition}/variant_calling/%s/consensus-%d.fasta"     % (algorithm, coverageLimit)
+        CONSENSUS_FASTQ       = "{condition}/variant_calling/%s/consensus-%d.fastq"     % (algorithm, coverageLimit)
+        VARIANTS_GFF          = "{condition}/variant_calling/%s/variants-%d.gff"        % (algorithm, coverageLimit)
+        MASKED_VARIANTS_GFF   = "{condition}/variant_calling/%s/masked-variants-%d.gff" % (algorithm, coverageLimit)
         coverageLimitArgument = "-X%d" % coverageLimit
 
     vcRule = pflow.genRuleOnce(

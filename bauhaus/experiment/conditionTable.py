@@ -203,6 +203,8 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
         baseVars = super(CoverageTitrationConditionTable, self).variables
         if "ConsensusAlgorithm" in self.df.columns:
             return [ "ConsensusAlgorithm" ] + baseVars
+        else:
+            return baseVars
 
     def _validateTable(self):
         super(CoverageTitrationConditionTable, self)._validateTable()
@@ -230,7 +232,7 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
 def conditionTableForWorkflow(protocol, inputCsv, resolver):
     if protocol in [ "Mapping", "ChunkedMapping", "VariantCalling" ]:
         return ResequencingConditionTable(inputCsv, resolver)
-    elif protocol in [ "CoverageTitration" ]:
+    elif protocol in [ "CoverageTitration", "CoverageTitrationReports" ]:
         return CoverageTitrationConditionTable(inputCsv, resolver)
     else:
         raise NotImplementedError
