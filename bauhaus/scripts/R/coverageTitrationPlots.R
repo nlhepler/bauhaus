@@ -6,9 +6,99 @@ library(gtools) # for "permutations"
 
 ignore <- function(x) {}
 
+.squishWhitespace <- function(s) {
+  str_replace_all(s, "[[:space:]]+", " ")
+}
+
+## Abbrev: wf == "workflow"
+
+## TODO: functions like these should move to pbexperiment or whatnot, or at least a 
+##       common.R or somesuch
+
+getConditionTable <- function(wfOutputRoot)
+{
+    read.csv(file.path(wfOutputRoot, "condition-table.csv"))
+}
+
+variableNames <- function(ct)
+{
+    nms <- names(ct)
+    matches <- str_detect(nms, "(Genome)|(p_.*)")
+    nms[matches]
+}
+    
+makeCoverageTitrationTable1 <- function(wfOutputRoot, conditionName)
+{
+    ##
+    ## Get the precomputed masked files, which we expect to find as
+    ##   {worfklowOutputRoot}/{condition}/variant_calling/masked-variants-{coverage}.gff
+    ##
+    alnSummary <- file.path(wfOutputRoot, conditionName, "variant_calling/alignments_summary.gff")
+    mvs <- Sys.glob(file.path(wfOutputRoot, conditionName, "variant_calling/masked-variants-*.gff"))
+
+    coverageFromPath   <- function(path) as.integer(str_match(path, ".*/masked-variants-(.*)\\.gff")[,2])
+
+    variantsCount.fast <- function(fname) {
+        CMD <- sprintf("egrep -v '^#' %s | wc -l", fname)
+        result <- as.integer(.squishWhitespace(system(CMD, intern=T)))
+        result
+    }
+
+    empiricalQV <- function(numErrors, genomeSize) {
+        err <- (numErrors + 1)/(genomeSize + 1)
+        -10*log10(err)
+    }
+
+    computeGenomeSize <- function(alignmentSummaryFile)
+    {
+        lines <- readLines(alignmentSummaryFile)
+        sequenceRegionLines <- lines[grep("##sequence-region", lines)]
+        tbl <- str_split_fixed(sequenceRegionLines, " ", 4)
+        chromosomeSizes <- as.numeric(tbl[,4])
+        sum(chromosomeSizes)
+    }
+    
+    computeQ01Coverage <- function(alignmentSummaryFile) {
+        cov2 <- readGFF(alignmentSummaryFile)$cov2
+        cov <- as.numeric(str_extract(cov2, "[^,]*"))
+        as.numeric(quantile(cov, 0.01))
+    }
+    
+    q01Coverage <- computeQ01Coverage(alnSummary)
+    numVariants <- sapply(mvs, variantsCount.fast)
+    genomeSize <- computeGenomeSize(alnSummary)
+    concordanceQV <- empiricalQV(numVariants, genomeSize)
+
+    ctt <- data.frame(
+        MaskedVariantsFile  = mvs,
+        Coverage            = coverageFromPath(mvs),
+        AvailableCoverage   = q01Coverage,
+        Condition           = conditionName,
+        NumVariants         = sapply(mvs, variantsCount.fast),
+        ConcordanceQV       = concordanceQV,
+        Algorithm           = "unknown")  ## TODO
+
+    ctt$ShouldCensor = (ctt$Coverage > ctt$AvailableCoverage)
+    ctt
+}
+
+makeCoverageTitrationTable <- function(wfOutputRoot)
+{
+    ct <- getConditionTable(wfOutputRoot)
+    rawCtt <- ldply(unique(ct$Condition),  function(c) { makeCoverageTitrationTable1(wfOutputRoot, c) })
+     
+    ## Get the table of just the conditions and associated variables---no runcodes/other inputs
+    ## Is this a concept that is more broadly useful?
+    keepColumns = append("Condition", variableNames(ct))
+    condensedCt <- unique(ct[,keepColumns])
+    
+    merge(rawCtt, condensedCt, by="Condition")
+}
+
+
 doTitrationPlots <- function(tbl)
 {
-    tbl <- tbl[tbl$ShouldCensor=="False",]
+    tbl <- tbl[tbl$ShouldCensor==F,]
 
     ## Implicit variables: Genome, Algorithm
     ## Explicit variables: have the "p_" prefix
