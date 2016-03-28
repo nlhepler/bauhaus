@@ -1,11 +1,7 @@
 * TODO Run end-to-end, with plots, on cluster
 * TODO Add some lil test cases
-
 * TODO Enable running CT from mapping job
-
 * TODO Move CT over to tertiary
-
-
 * TODO Update readme
 * TODO Add logo
 
