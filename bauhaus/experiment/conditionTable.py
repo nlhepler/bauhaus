@@ -1,4 +1,5 @@
-__all__ = [ "ConditionTable",
+__all__ = [ "InputType",
+            "ConditionTable",
             "ResequencingConditionTable",
             "CoverageTitrationConditionTable",
             "conditionTableForWorkflow",
@@ -16,6 +17,10 @@ class _DfHelpers(object):
     def pVariables(df):
         return [ k for k in df.columns if k.startswith("p_") ]
 
+
+class InputType(object):
+    SubreadSet   = 1
+    AlignmentSet = 2
 
 class ConditionTable(object):
     """
@@ -136,6 +141,17 @@ class ConditionTable(object):
         vals = self.condition(condition)[variableName].unique()
         assert len(vals) == 1
         return vals[0]
+
+    @property
+    def inputType(self):
+        cols = self.df.columns
+        if {"ReportsPath"}.issubset(cols) or \
+           {"RunCode", "ReportsFolder"}.issubset(cols):
+            return InputType.SubreadSet
+        if {"SMRTLinkServer", "JobId"}.issubset(cols) or \
+           {"JobPath"}.issubset(cols):
+            return InputType.AlignmentSet
+        raise NotImplementedError, "Input type not recognized/supported"
 
     def inputs(self, condition):
         return self._inputsByCondition[condition]
