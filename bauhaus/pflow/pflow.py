@@ -101,20 +101,17 @@ class PFlow(ContextTracker):
         f = open(outputNinjaFname, "w")
         with closing(ninja.Writer(f)) as w:
             w.comment("Variables")
-            w.newline()
             w.variable("ncpus", "8")
             w.variable("grid", "qsub -sync y -cwd -V -b y -e log -o log")
             w.variable("gridSMP", "$grid -pe smp")
             w.newline()
             w.comment("Rules")
-            w.newline()
             for rule in self._rules.iteritems():
                 w.rule(*rule)
                 w.newline()
             w.newline()
             w.comment("Build targets")
             for buildStmt in self._buildStmts:
-                w.newline()
                 w.build(buildStmt.outputs, buildStmt.rule, buildStmt.inputs,
                         variables=buildStmt.variables)
                 w.newline()
