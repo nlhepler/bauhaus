@@ -94,7 +94,7 @@ class ConditionTable(object):
         elif {"RunCode", "ReportsFolderH5"}.issubset(cols):
             raise NotImplementedError
         elif {"SMRTLinkServer", "JobId"}.issubset(cols):
-            raise NotImplementedError
+            return resolver.resolveAlignmentsSet(rowRecord.SMRTLinkServer, rowRecord.JobId)
         elif {"JobPath"}.issubset(cols):
             raise NotImplementedError
 

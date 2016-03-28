@@ -47,6 +47,10 @@ class Resolver(object):
     REFERENCE_MASKS_ROOT = "/mnt/secondary/Share/VariantCalling/Quiver/GenomeMasks"
     REFERENCES_ROOT = "/mnt/secondary/iSmrtanalysis/current/common/references"
 
+    SMRTLINK_SERVER_TO_JOBS_ROOT = \
+        { serverName : ("/pbi/dept/secondary/siv/smrtlink/smrtlink-" + smrtLinkId + "/smrtsuite/userdata/jobs_root")
+          for (serverName, smrtLinkId) in [ ("smrtlink-beta", "beta") ] }
+
     def __init__(self):
         self._selfCheck()
 
@@ -112,15 +116,29 @@ class Resolver(object):
             raise DataNotFound("missing mask for " + referenceName)
 
     def resolveJob(self, smrtLinkServer, jobId):
-        raise NotImplementedError
+        if smrtLinkServer not in self.SMRTLINK_SERVER_TO_JOBS_ROOT:
+            raise DataNotFound("Unrecognized SMRTLink server: %s" % smrtLinkServer)
+        jobsRoot = self.SMRTLINK_SERVER_TO_JOBS_ROOT[smrtLinkServer]
+        if not op.exists(jobsRoot):
+            raise ResolverFailure("NFS unavailable?")
+        prefix = jobId // 1000
+        jobPath = op.join(jobsRoot, "%03d" % prefix, "%06d" % jobId)
+        if not op.isdir(jobPath):
+            raise DataNotFound("Job dir not found: %s:%d" % (smrtLinkServer, jobId))
+        return jobPath
 
     def resolveReferenceForJob(self, smrtLinkServer, jobId):
         raise NotImplementedError
 
     def resolveAlignmentsSet(self, smrtLinkServer, jobId):
-        raise NotImplementedError
-
-
+        jobDir = self.resolveJob(smrtLinkServer, jobId)
+        candidates = glob(op.join(jobDir, "tasks/*/final*alignmentset.xml"))
+        if len(candidates) < 1:
+            raise DataNotFound("AlignmentSet not found for job: %s:%d" % (smrtLinkServer, jobId))
+        elif len(candidates) > 1:
+            raise DataNotFound("Multiple AlignmentSets present for job: %s:%d" % (smrtLinkServer, jobId))
+        else:
+            return candidates[0]
 
 
 class MockResolver(object):
@@ -154,3 +172,17 @@ class MockResolver(object):
         if referenceName not in ["lambdaNEB", "ecoliK12_pbi_March2013"]:
             raise DataNotFound("Reference mask not found: %s" % referenceName)
         return op.join(self.REFERENCE_MASKS_ROOT, referenceName + "-mask.gff")
+
+    def resolveJob(self, smrtLinkServer, jobId):
+        lookup = { ("smrtlink-beta", 4110) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004110",
+                   ("smrtlink-beta", 4111) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004111",
+                   ("smrtlink-beta", 4183) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004183",
+                   ("smrtlink-beta", 4206) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004206" }
+        if (smrtLinkServer, jobId) not in lookup:
+            raise DataNotFound("Job not found: %s:%d" % (smrtLinkServer, jobId))
+        else:
+            return lookup[(smrtLinkServer, jobId)]
+
+    def resolveAlignmentsSet(self, smrtLinkServer, jobId):
+        jobDir = self.resolveJob(smrtLinkServer, jobId)
+        return op.join(jobDir, "tasks/pbalign.tasks.consolidate_bam-0/final.alignmentset.alignmentset.xml")
