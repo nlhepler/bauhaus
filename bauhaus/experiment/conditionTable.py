@@ -90,11 +90,11 @@ class ConditionTable(object):
             # Is there a better way?  Maybe make resolvePrimaryPath recognize NaN?
             if pandas.isnull(rowRecord.ReportsFolder): reports = ""
             else: reports = rowRecord.ReportsFolder
-            return resolver.resolveSubreadsSet(rowRecord.RunCode, reports)
+            return resolver.resolveSubreadSet(rowRecord.RunCode, reports)
         elif {"RunCode", "ReportsFolderH5"}.issubset(cols):
             raise NotImplementedError
         elif {"SMRTLinkServer", "JobId"}.issubset(cols):
-            return resolver.resolveAlignmentsSet(rowRecord.SMRTLinkServer, rowRecord.JobId)
+            return resolver.resolveAlignmentSet(rowRecord.SMRTLinkServer, rowRecord.JobId)
         elif {"JobPath"}.issubset(cols):
             raise NotImplementedError
 

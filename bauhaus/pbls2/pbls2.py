@@ -88,13 +88,13 @@ class Resolver(object):
         """
         return op.join(self.resolveRunCode(runCode), reportsFolder)
 
-    def resolveSubreadsSet(self, runCode, reportsFolder=""):
+    def resolveSubreadSet(self, runCode, reportsFolder=""):
         reportsPath = self.resolvePrimaryPath(runCode, reportsFolder)
         subreadsFnames = glob(op.join(reportsPath, "*.subreadset.xml"))
         if len(subreadsFnames) < 1:
-            raise DataNotFound("SubreadsSet not found in %s" % reportsPath)
+            raise DataNotFound("SubreadSet not found in %s" % reportsPath)
         elif len(subreadsFnames) > 1:
-            raise DataNotFound("Multiple SubreadsSets present: %s" % reportsPath)
+            raise DataNotFound("Multiple SubreadSets present: %s" % reportsPath)
         return subreadsFnames[0]
 
     def resolveReference(self, referenceName):
@@ -130,7 +130,7 @@ class Resolver(object):
     def resolveReferenceForJob(self, smrtLinkServer, jobId):
         raise NotImplementedError
 
-    def resolveAlignmentsSet(self, smrtLinkServer, jobId):
+    def resolveAlignmentSet(self, smrtLinkServer, jobId):
         jobDir = self.resolveJob(smrtLinkServer, jobId)
         candidates = glob(op.join(jobDir, "tasks/*/final*alignmentset.xml"))
         if len(candidates) < 1:
@@ -150,7 +150,7 @@ class MockResolver(object):
     def __init__(self):
         pass
 
-    def resolveSubreadsSet(self, runCode, reportsFolder=""):
+    def resolveSubreadSet(self, runCode, reportsFolder=""):
         if not _isRuncode(runCode):
             raise ValueError('Argument "%s" does not appear to be a runcode' % runCode)
         lookup = \
@@ -183,6 +183,6 @@ class MockResolver(object):
         else:
             return lookup[(smrtLinkServer, jobId)]
 
-    def resolveAlignmentsSet(self, smrtLinkServer, jobId):
+    def resolveAlignmentSet(self, smrtLinkServer, jobId):
         jobDir = self.resolveJob(smrtLinkServer, jobId)
         return op.join(jobDir, "tasks/pbalign.tasks.consolidate_bam-0/final.alignmentset.alignmentset.xml")
