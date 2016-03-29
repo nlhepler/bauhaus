@@ -1,8 +1,5 @@
+__all__ = [ "Resolver" ]
 
-__all__ = [ "Resolver",
-            "MockResolver",
-            "ResolverFailure",
-            "DataNotFound" ]
 
 import requests, json, os.path as op, re
 from glob import glob
@@ -10,10 +7,6 @@ try:
     from urlparse import urlparse
 except: # Py3K
     from urllib.parse import urlparse
-
-
-class ResolverFailure(Exception): pass  # Internal failure in the resolver or nibbler
-class DataNotFound(Exception):    pass  # Data not found in nibbler database
 
 
 # We use the nibbler service to lookup run-codes until there is an
