@@ -1,25 +1,55 @@
 
-# bauhaus: a simplistic tertiary-analysis system for PacBio
+  ![bauhaus logo](./bauhaus.png)
 
 ## What is this?
 
+   `bauhaus` is a prototype implementation of a minimal
+   tertiary-analysis system for use in-house at PacBio.  It is not
+   intended as an official solution, but more as an experimental
+   playground for some ideas about how users can specify input and
+   analyis conditions.  *I'm really getting sick of typeless
+   programming languages so this is probably due for a rewrite in a
+   real language quite soon.*
+
+   `bauhaus` is best understood as a *compiler*.  It accepts the
+   user's specification of the experiment (a CSV table with a
+   well-defined schema), validates the table, resolves the inputs
+   (which can be referred to symbolically using *runcodes*, or *job
+   identifiers*, or explicitly using paths), and then generates an
+   output directory containing files `run.sh` and `build.ninja`.
+   `build.ninja` is a jobscript runnable using the ninja build tool;
+   `run.sh` is the main entry point, which sets up the software
+   environment properly and then executes the Ninja script.
+
 ## How to use it
 
-   ```sh
-   % bauhaus validate -p {protocolName} -t condition-table.csv
-   ```
-
-   OR
+   To run a *workflow*, with inputs and variables specified by a
+   *condition table*, you can invoke the `run` subcommand:
 
    ```sh
-   % bauhaus gen -p {protocolName} -t condition-table.csv
+   % bauhaus -o myWorkflow -w {workFlowName} -t condition-table.csv run
    ```
 
-   OR
+   This command does a few things: it 1) validates that the condition
+   table honors the schema and refers to valid input; 2) it compiles
+   the ninja script for the workflow and copies it and other required
+   scripts to the output directory ("myWorkflow" here); 3) it executes
+   the workflow.
+
+   You can also run the validate and generate steps without running
+   the workflow.  The `generate` subcommand performs validation and
+   generates the workflow directory, ready for execution.
 
    ```sh
-   % bauhaus run -p {protocolName} -t condition-table.csv
+   % bauhaus -o myWorkflow  -w {workFlowName} -t condition-table.csv generate
    ```
+
+   The `validate` subcommand performs just the validation.
+
+   ```sh
+   % bauhaus -w {workFlowName} -t condition-table.csv validate
+   ```
+
 
 ## What does it consist of?
 
@@ -42,8 +72,8 @@
      advantages to this approach: it enables workflows to be composed
      in a language (Python) that has genuine capabilities for
      composability, and then leaves execution to be driven by a
-     separate, robust, tool.  However, it lacks any dynamic
-     capabilities.
+     separate, robust, tool.  However, it lacks dynamic
+     capabilities, and the `ninja` buidld
 
    - `workflows` subpackage: workflows building on the `pflow` engine
      and the `experiment` model.  The workflows are divided into
@@ -64,3 +94,8 @@
   The `pflow` workflow engine is just a lark and is not intended to be
   used for the "real" tertiary analysis system.  For that, we are
   going to leverage `pbsmrtpipe`.
+
+
+References
+ninja
+condition table spec
