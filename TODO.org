@@ -1,10 +1,15 @@
-* TODO Run end-to-end, with plots, on cluster
-* TODO Add some lil test cases
-* TODO Enable running CT from mapping job
+* DONE Run end-to-end, with plots, on cluster
+* DONE Add some lil test cases
+* DONE Enable running CT from mapping job
+
 * TODO Move CT over to tertiary
 * TODO Update readme
 * TODO Add logo
 
+
+* TODO Make "run" work
+* TODO Add --list-workflows
+* TODO Make arguments snake case, it's POSIXy
 
 * TODO Get rid of the context stack, it doesn't really buy us anything
   Just pass extra arguments down, it's fine.
