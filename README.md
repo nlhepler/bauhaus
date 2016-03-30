@@ -13,13 +13,14 @@
 
    `bauhaus` is best understood as a *compiler*.  It accepts the
    user's specification of the experiment (a CSV table with a
-   well-defined schema), validates the table, resolves the inputs
-   (which can be referred to symbolically using *runcodes*, or *job
-   identifiers*, or explicitly using paths), and then generates an
-   output directory containing files `run.sh` and `build.ninja`.
-   `build.ninja` is a jobscript runnable using the ninja build tool;
-   `run.sh` is the main entry point, which sets up the software
-   environment properly and then executes the Ninja script.
+   [well-defined schema][condition-table-spec]), validates the table,
+   resolves the inputs (which can be referred to symbolically using
+   *runcodes*, or *job identifiers*, or explicitly using paths), and
+   then generates an output directory containing files `run.sh` and
+   `build.ninja`.  `build.ninja` is a jobscript runnable using the
+   ["ninja" build tool][ninja]; `run.sh` is the main entry point,
+   which sets up the software environment properly and then executes
+   the Ninja script.
 
 ## How to use it
 
@@ -96,6 +97,5 @@
   going to leverage `pbsmrtpipe`.
 
 
-References
-ninja
-condition table spec
+[ninja]: http://ninja-build.org/
+[condition-table-spec]: ./ConditionTableSpec.org
