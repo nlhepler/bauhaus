@@ -1,18 +1,24 @@
 * DONE Run end-to-end, with plots, on cluster
 * DONE Add some lil test cases
 * DONE Enable running CT from mapping job
+* DONE Update readme
+* DONE Add logo
 
+* TODO Add "walkthru"
+* TODO Remove consensusAlgorithm business, make it "configure"-able
+* TODO Make workflows into classes, factor it better
 * TODO Move CT over to tertiary
-* TODO Update readme
-* TODO Add logo
 
+
+
+
+* TODO Get rid of the context stack, it doesn't really buy us anything
+  Just pass extra arguments down, it's fine.
 
 * TODO Make "run" work
 * TODO Add --list-workflows
 * TODO Make arguments snake case, it's POSIXy
 
-* TODO Get rid of the context stack, it doesn't really buy us anything
-  Just pass extra arguments down, it's fine.
 * TODO Look into managing R dependencies using packrat so we're not at the mercy of what's on the cluster
 * TODO Long-term: separate input table and secondary analysis options table
 

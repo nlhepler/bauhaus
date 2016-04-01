@@ -5,7 +5,7 @@ Let's try a very simple mapping job (no chunking)
 
   $ bauhaus -o map -m -t $TABLE -w Mapping generate
   Validation and input resolution succeeded.
-  Workflow script written to build.ninja.
+  Runnable workflow written to directory "map"
 
 
   $ tree map

@@ -5,7 +5,7 @@ Run a bigger workflow--coverage titration with reports.
 
   $ bauhaus -o ctFromRuns -m -t $TABLE -w CoverageTitrationReports generate
   Validation and input resolution succeeded.
-  Workflow script written to build.ninja.
+  Runnable workflow written to directory "ctFromRuns"
 
 
   $ tree ctFromRuns

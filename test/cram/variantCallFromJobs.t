@@ -5,7 +5,7 @@ Do variant calling from pre-existing mapping jobs.
 
   $ bauhaus -o vc -m -t $TABLE -w VariantCalling generate
   Validation and input resolution succeeded.
-  Workflow script written to build.ninja.
+  Runnable workflow written to directory "vc"
 
   $ tree vc
   vc

@@ -21,7 +21,7 @@ def doGenerate(args):
     pflow = PFlow()
     gen(pflow, ct)
     pflow.write("build.ninja")
-    print "Workflow script written to build.ninja."
+    print 'Runnable workflow written to directory "%s"' % args.outputDirectory
 
 def doRun(args):
     raise NotImplementedError
