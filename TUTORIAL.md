@@ -11,12 +11,12 @@ First, we build a CSV file that describes the input sources and
 associated variables. Here's the table we will encode in our CSV file
 `experiment1-inputs.csv`:
 
-  | Condition   |      RunCode | ReportsFolder | Genome    | p_Chemistry |
-  |-------------|--------------|---------------|-----------|-------------|
-  | ControlChem | 3150120-0001 |               | lambdaNEB | Control     |
-  | ControlChem | 3150120-0002 |               | lambdaNEB | Control     |
-  | SparklyChem | 3150128-0001 |               | lambdaNEB | Sparkly     |
-  | SparklyChem | 3150128-0002 |               | lambdaNEB | Sparkly     |
+| Condition   |      RunCode | ReportsFolder | Genome    | p_Chemistry |
+|-------------|--------------|---------------|-----------|-------------|
+| ControlChem | 3150120-0001 |               | lambdaNEB | Control     |
+| ControlChem | 3150120-0002 |               | lambdaNEB | Control     |
+| SparklyChem | 3150128-0001 |               | lambdaNEB | Sparkly     |
+| SparklyChem | 3150128-0002 |               | lambdaNEB | Sparkly     |
 
 
 A couple things to note.  First, note that we are "symbolically"
