@@ -3,7 +3,7 @@ Let's try a very simple mapping job (no chunking)
 
   $ TABLE=$TESTDIR/../data/lambdaAndEcoli.csv
 
-  $ bauhaus -o map -m -t $TABLE -w Mapping generate
+  $ bauhaus -o map -m -t $TABLE -w BasicMapping generate
   Validation and input resolution succeeded.
   Runnable workflow written to directory "map"
 

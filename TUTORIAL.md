@@ -2,14 +2,14 @@
 ## `bauhaus` Tutorial
 
 Let's suppose we want to run an experiment on a couple different
-experimental conditions---chemistries the regular "Control" chemistry
-and a special new "Sparkly" chemistry from the lab.  We need to
-shepherd these runs through some secondary analysis and then do some
+experimental conditions---the regular "Control" chemistry and a
+special new "Sparkly" chemistry from the lab.  We need to shepherd
+these runs through some secondary analysis and then do some
 comparative analysis on the conditions.
 
 First, we build a CSV file that describes the input sources and
 associated variables. Here's the table we will encode in our CSV file
-`experiment1-inputs.csv`:
+`inputs.csv`:
 
 | Condition   |      RunCode | ReportsFolder | Genome    | p_Chemistry |
 |-------------|--------------|---------------|-----------|-------------|
@@ -36,12 +36,12 @@ workflow for us.  But first let's explicitly ask `bauhaus` to
 correctly and the data can actually be found.
 
   ```sh
-  $ bauhaus -t experiment1-inputs.csv -w Mapping validate
+  $ bauhaus -t inputs.csv -w BasicMapping validate
   Validation and input resolution succeeded.
   ```
 
 So far so good.  Note that we had to specify the "workflow" we want to
-run, using `-w Mapping`.  In order to validate the table, we need to
+run, using `-w BasicMapping`.  In order to validate the table, we need to
 know what workflow it will be used with---for example, the "Genome"
 column is necessary for mapping-based workflows whereas it may not be
 necessary for other workflows.
@@ -49,7 +49,7 @@ necessary for other workflows.
 Next, we want to generate a runnable workflow for performing this mapping:
 
   ```sh
-  $ bauhaus -t experiment1-inputs.csv -w Mapping -o experiment1 generate
+  $ bauhaus -t inputs.csv -w BasicMapping -o experiment1 generate
   Validation and input resolution succeeded.
   Runnable Workflow written to directory "experiment1"
   ```
@@ -136,9 +136,49 @@ using the `ninja -t graph` command and graphviz:
   $ ninja -C experiment1 -t graph > build.dot && dot -Tpng build.dot > build.png
   ```
 
+Here's the `build.png`:
+
 ![simple mapping workflow graph](./img/simple-mapping.png)
 
+So you can see that each run is mapped and then within each condition
+the mapped outputs are combined (in a lightweight fashion, using the
+["dataset" concept][dataset]---this just involves small operations to
+an XML file).  Two observations about this: first, the mapping jobs
+will be quite slow since they are using a single node to map subreads
+from up to a million ZMWs. Second, the job isn't very interesting
+because it doesn't result in any comparative analyses at all.
+
+So let's try running a more realistic workflow, which will run more
+efficiently: consensus coverate titration.  In consensus coverage
+titration, we see how many residual errors remain from performing
+consensus at different coverage levels.  Note that scientifically
+speaking, lambda phage would not be a good genome for this analysis
+because it's too small a genome.  But we're just showcasing `bauhaus`,
+so let's just do it:
+
+
+  ```sh
+  $ bauhaus -t inputs.csv -w CoverageTitrationReports -o experiment2 generate
+  ```
+
+Here's a graph of the worfklow script:
+
+![coverage titration reports workflow graph](./img/coverage-titration-reports.png)
+
+What's going on here is that we are 1) (conceptuallly, again using the
+dataset concept) splitting each input run into parts; 2) mapping each
+part; 3) physically combining the mapped parts of each input run (an
+unnecessary step, arguably); 4) *conceptually* (dataset...) combine
+the mapped inputs for each condition; 5) perform unfiltered variant
+calling at different coverage levels; 6) filter out variants in
+genomic regions where the reference genome is suspect (this is an
+unfortunate reality since some of our references generated a few years
+ago have misassemblies); 7) finally, summarize the filtered variant
+counts and types across conditions using an R script.  Quite a bit
+more complicated.  But at the end of the day, upon running, the user
+will get a PDF summarizing the analysis.
 
 
 [ninja]: http://ninja-build.org/
 [condition-table-spec]: ./ConditionTableSpec.org
+[dataset]: http://pacbiofileformats.readthedocs.org/en/3.0/DataSet.html

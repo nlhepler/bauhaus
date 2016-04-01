@@ -1,7 +1,7 @@
 from bauhaus.workflows.secondary import *
 
 availableWorkflows = \
-    { "Mapping"                  : genMappingWorkflow,
+    { "BasicMapping"             : genMappingWorkflow,
       "ChunkedMapping"           : genChunkedMappingWorkflow,
       "VariantCalling"           : genVariantCallingWorkflow,
       "CoverageTitration"        : genCoverageTitrationWorkflow,
