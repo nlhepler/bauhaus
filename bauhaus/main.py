@@ -1,6 +1,5 @@
 import argparse, shutil, sys, os, os.path as op
 
-from bauhaus.experiment import conditionTableForWorkflow
 from bauhaus.pbls2 import Resolver, MockResolver
 from bauhaus.pflow import PFlow
 from bauhaus.workflows import availableWorkflows
@@ -11,15 +10,15 @@ def doValidate(args):
         r = MockResolver()
     else:
         r = Resolver()
-    ct = conditionTableForWorkflow(args.workflow, args.conditionTable, r)
+    wfg = availableWorkflows[args.workflow]()
+    ct = wfg.conditionTableType()(args.conditionTable, r)
     print "Validation and input resolution succeeded."
-    return ct
+    return wfg, ct
 
 def doGenerate(args):
-    ct = doValidate(args)
-    gen = availableWorkflows[args.workflow]
+    wfg, ct = doValidate(args)
     pflow = PFlow()
-    gen(pflow, ct)
+    wfg.generate(pflow, ct)
     pflow.write("build.ninja")
     print 'Runnable workflow written to directory "%s"' % args.outputDirectory
 

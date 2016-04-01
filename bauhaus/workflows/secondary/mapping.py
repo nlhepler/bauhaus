@@ -1,8 +1,9 @@
-__all__ = [ "genMappingWorkflow", "genChunkedMappingWorkflow" ]
+__all__ = [ "BasicMappingWorkflow", "ChunkedMappingWorkflow" ]
 
 import os.path as op
 
-from bauhaus.experiment import InputType
+from bauhaus.experiment import InputType, ResequencingConditionTable
+from bauhaus import Workflow
 
 # ----- Splitting, merging, consolidating -----
 
@@ -155,33 +156,60 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
 # These really ought to be codified using types.  Damn you Python.
 # TODO: do we consider these "tertiary"?
 
-def genMappingWorkflow(pflow, ct):
-    outputDict = {}
-    for condition in ct.conditions:
-        with pflow.context("condition", condition):
-            reference = ct.reference(condition)
-            if ct.inputType == InputType.SubreadSet:
-                subreadsSets = ct.inputs(condition)
-                outputDict[condition] = genMapping(pflow, subreadsSets, reference)
-            elif ct.inputType == InputType.AlignmentSet:
-                outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
-            else:
-                raise NotImplementedError, "Support not yet implemented for this input type"
-    return outputDict
+class BasicMappingWorkflow(Workflow):
+    """
+    Basic mapping---not chunked, just dead simple.
+    """
+    @staticmethod
+    def name():
+        return "BasicMapping"
 
-def genChunkedMappingWorkflow(pflow, ct):
-    outputDict = {}
-    for condition in ct.conditions:
-        with pflow.context("condition", condition):
-            reference = ct.reference(condition)
-            if ct.inputType == InputType.SubreadSet:
-                subreadsSets = ct.inputs(condition)
-                outputDict[condition] = genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8)
-            elif ct.inputType == InputType.AlignmentSet:
-                outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
-            else:
-                raise NotImplementedError, "Support not yet implemented for this input type"
-    return outputDict
+    @staticmethod
+    def conditionTableType():
+        return ResequencingConditionTable
+
+    def generate(self, pflow, ct):
+        outputDict = {}
+        for condition in ct.conditions:
+            with pflow.context("condition", condition):
+                reference = ct.reference(condition)
+                if ct.inputType == InputType.SubreadSet:
+                    subreadsSets = ct.inputs(condition)
+                    outputDict[condition] = genMapping(pflow, subreadsSets, reference)
+                elif ct.inputType == InputType.AlignmentSet:
+                    outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
+                else:
+                    raise NotImplementedError, "Support not yet implemented for this input type"
+        return outputDict
+
+
+
+class ChunkedMappingWorkflow(Workflow):
+    """
+    Chunked mapping
+    """
+    @staticmethod
+    def name():
+        return "ChunkedMapping"
+
+    @staticmethod
+    def conditionTableType():
+        return ResequencingConditionTable
+
+    def generate(self, pflow, ct):
+        outputDict = {}
+        for condition in ct.conditions:
+            with pflow.context("condition", condition):
+                reference = ct.reference(condition)
+                if ct.inputType == InputType.SubreadSet:
+                    subreadsSets = ct.inputs(condition)
+                    outputDict[condition] = genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8)
+                elif ct.inputType == InputType.AlignmentSet:
+                    outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
+                else:
+                    raise NotImplementedError, "Support not yet implemented for this input type"
+        return outputDict
+
 
 
 # -------------------- Demo -------------------

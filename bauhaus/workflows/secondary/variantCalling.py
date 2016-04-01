@@ -1,4 +1,10 @@
-from .mapping import genChunkedMappingWorkflow
+__all__ = [ "VariantCallingWorkflow" ]
+
+from bauhaus import Workflow
+from bauhaus.experiment import ResequencingConditionTable
+
+from .mapping import ChunkedMappingWorkflow
+
 
 # -- Basic variant calling...
 
@@ -63,15 +69,25 @@ def genCoverageSummary(pflow, alignmentSet, reference):
         dict(reference=reference))
     return bs.outputs
 
-def genVariantCallingWorkflow(pflow, ct):
+
+class VariantCallingWorkflow(Workflow):
     """
-    Run variant calling on every condition.
+    Run variant calling on every condition
     """
-    mapping = genChunkedMappingWorkflow(pflow, ct)
-    outputDict = {}
-    for (condition, alignmentSets) in mapping.iteritems():
-        alignmentSet = alignmentSets[0]
-        reference = ct.reference(condition)
-        with pflow.context("condition", condition):
-            outputDict[condition] = genVariantCalling(pflow, alignmentSet, reference, algorithm="arrow")
-    return outputDict
+    @staticmethod
+    def name():
+        return "VariantCalling"
+
+    @staticmethod
+    def conditionTableType():
+        return ResequencingConditionTable
+
+    def generate(self, pflow, ct):
+        mapping = ChunkedMappingWorkflow().generate(pflow, ct)
+        outputDict = {}
+        for (condition, alignmentSets) in mapping.iteritems():
+            alignmentSet = alignmentSets[0]
+            reference = ct.reference(condition)
+            with pflow.context("condition", condition):
+                outputDict[condition] = genVariantCalling(pflow, alignmentSet, reference, algorithm="arrow")
+        return outputDict

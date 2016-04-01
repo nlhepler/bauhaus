@@ -1,8 +1,15 @@
 from bauhaus.workflows.secondary import *
+from bauhaus.workflows.tertiary  import *
+
+_workflows = [
+    # Secondary
+    BasicMappingWorkflow,
+    ChunkedMappingWorkflow,
+    VariantCallingWorkflow,
+    CoverageTitrationWorkflow,
+    # Tertiary
+    CoverageTitrationReportsWorkflow ]
 
 availableWorkflows = \
-    { "BasicMapping"             : genMappingWorkflow,
-      "ChunkedMapping"           : genChunkedMappingWorkflow,
-      "VariantCalling"           : genVariantCallingWorkflow,
-      "CoverageTitration"        : genCoverageTitrationWorkflow,
-      "CoverageTitrationReports" : genCoverageTitrationReportsWorkflow }
+    { wf.name() : wf
+      for wf in _workflows }

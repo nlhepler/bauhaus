@@ -2,7 +2,6 @@ __all__ = [ "InputType",
             "ConditionTable",
             "ResequencingConditionTable",
             "CoverageTitrationConditionTable",
-            "conditionTableForWorkflow",
             "TableValidationError",
             "InputResolutionError" ]
 
@@ -220,13 +219,3 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
         for condition in self.conditions:
             genome = self.genome(condition)
             self._referenceMaskByCondition[condition] = resolver.resolveReferenceMask(genome)
-
-
-
-def conditionTableForWorkflow(protocol, inputCsv, resolver):
-    if protocol in [ "BasicMapping", "ChunkedMapping", "VariantCalling" ]:
-        return ResequencingConditionTable(inputCsv, resolver)
-    elif protocol in [ "CoverageTitration", "CoverageTitrationReports" ]:
-        return CoverageTitrationConditionTable(inputCsv, resolver)
-    else:
-        raise NotImplementedError
