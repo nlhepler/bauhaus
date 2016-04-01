@@ -1,5 +1,5 @@
 
-  ![bauhaus logo](./bauhaus.png)
+  ![bauhaus logo](./img/bauhaus.png)
 
 ## What is this?
 
