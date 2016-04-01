@@ -86,10 +86,6 @@
       - The mandatory column "Genome" in resequencing-based workflows
         is used to identify the mapping reference to use.
 
-      - The optional column "ConsensusAlgorithm" in the coverage
-        titration workflow can be used to select a consensus algorithm
-        from ={arrow, quiver, poa}= to be run by the workflow.
-
     To restate: these implicit variables inform the logic in the
     workflow execution and are also available for
     conditioning/faceting in final tertiary analysis plots.

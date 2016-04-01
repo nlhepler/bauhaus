@@ -19,7 +19,7 @@ def genCoverageTitrationWorkflow(pflow, ct):
         with pflow.context("condition", condition):
             coverageSummary = genCoverageSummary(pflow, alignmentSet, reference)[0]
             outputDict[condition].append(coverageSummary)
-            algorithm = ct.consensusAlgorithm(condition)
+            algorithm = "arrow" # TODO: make configurable!
             with pflow.context("consensusAlgorithm", algorithm):
                 for x in COVERAGE_LEVELS:
                     outputDict[condition].extend(
