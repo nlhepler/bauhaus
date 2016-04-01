@@ -1,8 +1,9 @@
-* Nowish [0/3]
-** TODO Remove consensusAlgorithm business, make it "configure"-able
-** TODO Make workflows into classes, factor it better
-** TODO Move CT over to tertiary
+* Nowish [2/5]
+** DONE Remove consensusAlgorithm business, make it "configure"-able
+** DONE Make workflows into classes, factor it better
 
+** TODO Get CCS analysis working!
+** TODO Move CT over to tertiary
 
 
 ** TODO Add a "config" capability to, for example, choose the consensus algo...
