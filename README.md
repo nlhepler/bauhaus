@@ -1,5 +1,5 @@
 
-  ![bauhaus logo](./img/bauhaus.png)
+  ![bauhaus logo](./doc/img/bauhaus.png)
 
 ## What is this?
 
@@ -24,7 +24,7 @@
 
 ## How to get started?
 
-   Please read the [tutorial](./TUTORIAL.md).
+   Please read the [tutorial](./doc/TUTORIAL.md).
 
 ## Usage manual
 
@@ -102,4 +102,4 @@
 
 
 [ninja]: http://ninja-build.org/
-[condition-table-spec]: ./ConditionTableSpec.org
+[condition-table-spec]: ./doc/ConditionTableSpec.org
