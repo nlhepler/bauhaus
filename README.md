@@ -22,7 +22,11 @@
    which sets up the software environment properly and then executes
    the Ninja script.
 
-## How to use it
+## How to get started?
+
+   Please read the [tutorial](./TUTORIAL.md).
+
+## Usage manual
 
    To run a *workflow*, with inputs and variables specified by a
    *condition table*, you can invoke the `run` subcommand:
