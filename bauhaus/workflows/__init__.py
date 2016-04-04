@@ -8,6 +8,8 @@ _workflows = [
     VariantCallingWorkflow,
     CoverageTitrationWorkflow,
     BasicCCSWorkflow,
+    ChunkedCCSWorkflow,
+    CCSMappingWorkflow,
     # Tertiary
     CoverageTitrationReportsWorkflow ]
 

@@ -1,4 +1,4 @@
-__all__ = [ "BasicMappingWorkflow", "ChunkedMappingWorkflow" ]
+__all__ = [ "BasicMappingWorkflow", "ChunkedMappingWorkflow"]
 
 import os.path as op
 
@@ -18,7 +18,7 @@ from bauhaus.experiment import (InputType, ResequencingConditionTable)
 
 # Assumption that should be asserted: each input subreads set comes from a separate movie.
 
-def genMapping(pflow, subreadsSets, reference):
+def genMapping(pflow, subreadSets, reference):
     """
     Map the subreads set, without chunking.  This is painfully slow on
     Sequel-scale data.
@@ -27,18 +27,37 @@ def genMapping(pflow, subreadsSets, reference):
         "map",
         "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
     alignmentSets = []
-    for subreadsSet in subreadsSets:
-        with pflow.context("movieName", movieName(subreadsSet)):
+    for subreadSet in subreadSets:
+        with pflow.context("movieName", movieName(subreadSet)):
             buildVariables = dict(reference=reference, ncpus=8)
             alignmentSets.extend(pflow.genBuildStatement(
                 ["{condition}/mapping/{movieName}.alignmentset.xml"],
                 "map",
-                [subreadsSet],
+                [subreadSet],
                 buildVariables).outputs)
-    return genAlignmentSetMergeForCondition(pflow, alignmentSets)
+    return genDatasetMergeForCondition(pflow, alignmentSets, "mapping", "alignmentset")
 
+def genMappingCCS(pflow, ccsSets, reference):
+    """
+    Map... CCS reads.  We really need to make the mapping routine
+    generic.  (In the past this actually did require different options
+    to blasr/pbalign.  It doesn't anymore.)
+    """
+    mapRule = pflow.genRuleOnce(
+        "mapCCS",
+        "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
+    alignmentSets = []
+    for ccsSet in ccsSets:
+        with pflow.context("entityName", entityName(ccsSet)):
+            buildVariables = dict(reference=reference, ncpus=8)
+            alignmentSets.extend(pflow.genBuildStatement(
+                ["{condition}/ccs_mapping/{entityName}.consensusalignments.xml"],
+                "mapCCS",
+                [ccsSet],
+                buildVariables).outputs)
+    return genDatasetMergeForCondition(pflow, alignmentSets, "ccs_mapping", "consensusalignments")
 
-def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
+def genChunkedMapping(pflow, subreadSets, reference, splitFactor=8):
     """
     Break the subreads set into chunks, map the chunks, then
     consolidate the mapped chunks
@@ -47,22 +66,22 @@ def genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8):
         "map",
         "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
     alignmentSets = []
-    for subreadsSet in subreadsSets:
-        with pflow.context("movieName", movieName(subreadsSet)):
+    for subreadSet in subreadSets:
+        with pflow.context("movieName", movieName(subreadSet)):
             alignmentSetChunks = []
-            subreadsSetChunks = genSubreadsSetSplit(pflow, subreadsSet, splitFactor)
-            for (i, subreadsSetChunk) in enumerate(subreadsSetChunks):
+            subreadSetChunks = genSubreadSetSplit(pflow, subreadSet, splitFactor)
+            for (i, subreadSetChunk) in enumerate(subreadSetChunks):
                 with pflow.context("chunkNum", i):
                     buildVariables = dict(reference=reference, ncpus=8)
                     buildStmt = pflow.genBuildStatement(
                         ["{condition}/mapping_chunks/{movieName}.chunk{chunkNum}.alignmentset.xml"],
                         "map",
-                        [subreadsSetChunk],
+                        [subreadSetChunk],
                         buildVariables)
                     alignmentSetChunks.extend(buildStmt.outputs)
-            alignmentSets.extend(genAlignmentSetConsolidateForMovie(pflow, alignmentSetChunks))
-    return genAlignmentSetMergeForCondition(pflow, alignmentSets)
-
+            alignmentSets.extend(
+                genDatasetConsolidateForMovie(pflow, alignmentSetChunks, "mapping", "alignmentset"))
+    return genDatasetMergeForCondition(pflow, alignmentSets, "mapping", "alignmentset")
 
 # ---------- Workflows -------------
 # Unlike the generators above, these guys return a dict of Condition -> resolved outputs
@@ -87,14 +106,13 @@ class BasicMappingWorkflow(Workflow):
             with pflow.context("condition", condition):
                 reference = ct.reference(condition)
                 if ct.inputType == InputType.SubreadSet:
-                    subreadsSets = ct.inputs(condition)
-                    outputDict[condition] = genMapping(pflow, subreadsSets, reference)
+                    subreadSets = ct.inputs(condition)
+                    outputDict[condition] = genMapping(pflow, subreadSets, reference)
                 elif ct.inputType == InputType.AlignmentSet:
                     outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
                 else:
                     raise NotImplementedError, "Support not yet implemented for this input type"
         return outputDict
-
 
 
 class ChunkedMappingWorkflow(Workflow):
@@ -115,10 +133,10 @@ class ChunkedMappingWorkflow(Workflow):
             with pflow.context("condition", condition):
                 reference = ct.reference(condition)
                 if ct.inputType == InputType.SubreadSet:
-                    subreadsSets = ct.inputs(condition)
-                    outputDict[condition] = genChunkedMapping(pflow, subreadsSets, reference, splitFactor=8)
+                    subreadSets = ct.inputs(condition)
+                    outputDict[condition] = genChunkedMapping(pflow, subreadSets, reference, splitFactor=8)
                 elif ct.inputType == InputType.AlignmentSet:
-                    outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
+                    outputDict[condition] = genDatasetMergeForCondition(pflow, ct.inputs(condition), "mapping", "alignmentset")
                 else:
                     raise NotImplementedError, "Support not yet implemented for this input type"
         return outputDict

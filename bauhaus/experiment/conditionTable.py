@@ -18,8 +18,10 @@ class _DfHelpers(object):
 
 
 class InputType(object):
-    SubreadSet   = 1
-    AlignmentSet = 2
+    SubreadSet            = 1
+    AlignmentSet          = 2
+    ConsensusReadSet      = 3
+    ConsensusAlignmentSet = 4
 
 class ConditionTable(object):
     """

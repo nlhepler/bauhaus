@@ -36,7 +36,7 @@ Let's try a very simple mapping job (no chunking)
   rule map
     command = $gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out
   
-  rule mergeAlignmentSetsForCondition
+  rule mergeDatasetsForCondition
     command = $grid dataset merge $out $in
   
   
@@ -53,8 +53,7 @@ Let's try a very simple mapping job (no chunking)
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
-  build Lambda/mapping/all_movies.alignmentset.xml: $
-      mergeAlignmentSetsForCondition $
+  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
       Lambda/mapping/m54008_160308_002050.alignmentset.xml $
       Lambda/mapping/m54008_160308_053311.alignmentset.xml
   
@@ -70,8 +69,7 @@ Let's try a very simple mapping job (no chunking)
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
-  build Ecoli/mapping/all_movies.alignmentset.xml: $
-      mergeAlignmentSetsForCondition $
+  build Ecoli/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
       Ecoli/mapping/m54011_160305_235923.alignmentset.xml $
       Ecoli/mapping/m54011_160306_050740.alignmentset.xml
   
