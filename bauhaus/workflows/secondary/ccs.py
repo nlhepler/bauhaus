@@ -13,7 +13,7 @@ from .mapping import genMappingCCS
 def genCCS(pflow, subreadSets):
     ccsRule = pflow.genRuleOnce(
         "ccs",
-        "$gridSMP $ncpus ccs --numThreads=$ncpus $in $outBam && " +
+        "$gridSMP $ncpus ccs --force --numThreads=$ncpus $in $outBam && " +
         "dataset create $outBam $out")
     ccsSets = []
     for subreadSet in subreadSets:
@@ -30,7 +30,7 @@ def genCCS(pflow, subreadSets):
 def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
     ccsRule = pflow.genRuleOnce(
         "ccs",
-        "$gridSMP $ncpus ccs --numThreads=$ncpus $in $outBam && " +
+        "$gridSMP $ncpus ccs --force --numThreads=$ncpus $in $outBam && " +
         "dataset create $outBam $out")
     ccsSets = []
     for subreadSet in subreadSets:
