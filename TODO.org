@@ -1,15 +1,19 @@
-* Nowish [2/5]
+* Nowish [3/6]
 ** DONE Remove consensusAlgorithm business, make it "configure"-able
 ** DONE Make workflows into classes, factor it better
-
-** TODO Get CCS analysis working!
-** TODO remove plurals
+** DONE remove plurals
+** WAIT Get CCS analysis working!
 ** TODO Move CT over to tertiary
 
 
-** TODO Add a "config" capability to, for example, choose the consensus algo...
+* Nowish 2 [/]
+** TODO Run ninja with -k;  tee to log file
+** TODO Fix CCS dumbness 1: report is not a CSV file
+** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
 
 * Laterish [0/6]
+** TODO Add a "config" capability to, for example, choose the consensus algo...
+
 ** TODO Get rid of the context stack, it doesn't really buy us anything
    Just pass extra arguments down, it's fine.
 
