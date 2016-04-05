@@ -14,7 +14,7 @@ def genCCS(pflow, subreadSets):
     ccsRule = pflow.genRuleOnce(
         "ccs",
         "$gridSMP $ncpus ccs --force --numThreads=$ncpus $in $outBam && " +
-        "dataset create $outBam $out")
+        "dataset create $out $outBam")
     ccsSets = []
     for subreadSet in subreadSets:
         with pflow.context("movieName", movieName(subreadSet)):
@@ -31,7 +31,7 @@ def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
     ccsRule = pflow.genRuleOnce(
         "ccs",
         "$gridSMP $ncpus ccs --force --numThreads=$ncpus $in $outBam && " +
-        "dataset create $outBam $out")
+        "dataset create $out $outBam")
     ccsSets = []
     for subreadSet in subreadSets:
         with pflow.context("movieName", movieName(subreadSet)):
