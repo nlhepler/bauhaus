@@ -11,4 +11,4 @@ THISDIR=$(cd "$(dirname "$0")" && pwd)
 cd $THISDIR
 export PATH=$THISDIR/scripts:$PATH
 
-~dalexander/bin/ninja
+~dalexander/bin/ninja -v -k 1 | tee ninja.log
