@@ -28,10 +28,10 @@ def genMapping(pflow, subreadSets, reference):
         "$gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out")
     alignmentSets = []
     for subreadSet in subreadSets:
-        with pflow.context("movieName", movieName(subreadSet)):
+        with pflow.context("entityName", entityName(subreadSet)):
             buildVariables = dict(reference=reference, ncpus=8)
             alignmentSets.extend(pflow.genBuildStatement(
-                ["{condition}/mapping/{movieName}.alignmentset.xml"],
+                ["{condition}/mapping/{entityName}.alignmentset.xml"],
                 "map",
                 [subreadSet],
                 buildVariables).outputs)
