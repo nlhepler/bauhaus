@@ -9,7 +9,7 @@ if ("install" in sys.argv) and sys.version_info < (2, 7, 0):
     sys.exit(-1)
 
 globals = {}
-execfile("bauhaus/__init__.py", globals)
+execfile("bauhaus/__version__.py", globals)
 __VERSION__ = globals["__VERSION__"]
 
 def _get_local_file(file_name):
