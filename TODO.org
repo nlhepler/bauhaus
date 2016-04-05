@@ -3,6 +3,7 @@
 ** DONE Make workflows into classes, factor it better
 
 ** TODO Get CCS analysis working!
+** TODO remove plurals
 ** TODO Move CT over to tertiary
 
 
@@ -55,3 +56,4 @@
    | Ecoli_arrow | ecoliK12_pbi_March2013 | arrow              |
 
    Can imagine encoding much more than just this---secondary analysis version, etc.
+** TODO We are implicitly assuming that we have distinct movie names within a condition.  We should validate this?
