@@ -12,7 +12,7 @@ ignore <- function(x) {}
 
 ## Abbrev: wf == "workflow"
 
-## TODO: functions like these should move to pbexperiment or whatnot, or at least a 
+## TODO: functions like these should move to pbexperiment or whatnot, or at least a
 ##       common.R or somesuch
 
 getConditionTable <- function(wfOutputRoot)
@@ -26,7 +26,7 @@ variableNames <- function(ct)
     matches <- str_detect(nms, "(Algorithm)|(Genome)|(p_.*)")
     nms[matches]
 }
-    
+
 makeCoverageTitrationTable1 <- function(maskedVariantsDir)
 {
     ##
@@ -35,7 +35,7 @@ makeCoverageTitrationTable1 <- function(maskedVariantsDir)
     ##
     alnSummary <- file.path(maskedVariantsDir, "../alignments_summary.gff")
     mvs <- Sys.glob(file.path(maskedVariantsDir, "masked-variants-*.gff"))
-    
+
     algo <- basename(maskedVariantsDir)
     condition <- basename(dirname(dirname(maskedVariantsDir)))
     coverageFromPath   <- function(path) as.integer(str_match(path, ".*/masked-variants-(.*)\\.gff")[,2])
@@ -59,13 +59,13 @@ makeCoverageTitrationTable1 <- function(maskedVariantsDir)
         chromosomeSizes <- as.numeric(tbl[,4])
         sum(chromosomeSizes)
     }
-    
+
     computeQ01Coverage <- function(alignmentSummaryFile) {
         cov2 <- readGFF(alignmentSummaryFile)$cov2
         cov <- as.numeric(str_extract(cov2, "[^,]*"))
         as.numeric(quantile(cov, 0.01))
     }
-    
+
     q01Coverage <- computeQ01Coverage(alnSummary)
     numVariants <- sapply(mvs, variantsCount.fast)
     genomeSize <- computeGenomeSize(alnSummary)
@@ -87,17 +87,17 @@ makeCoverageTitrationTable1 <- function(maskedVariantsDir)
 makeCoverageTitrationTable <- function(wfOutputRoot)
 {
     ct <- getConditionTable(wfOutputRoot)
-    
+
     ## dig around the wf output to find masked-variants files.
     mvDirs <- Sys.glob(file.path(wfOutputRoot, "*/variant_calling/*/"))
 
     rawCtt <- ldply(mvDirs,  function(d) { makeCoverageTitrationTable1(d) })
-     
+
     ## Get the table of just the conditions and associated variables---no runcodes/other inputs
     ## Is this a concept that is more broadly useful?
     keepColumns = append("Condition", variableNames(ct))
     condensedCt <- unique(ct[,keepColumns])
-    
+
     merge(rawCtt, condensedCt, by="Condition")
 }
 
@@ -116,7 +116,7 @@ doTitrationPlots <- function(tbl)
           scale_y_continuous("Concordance (QV)") +
           #scale_color_manual(values = extras$colors) +
           ggtitle("Consensus Performance, all conditions"))
-  
+
     # Facet on individual variables
     for (v in variables) {
         print(
@@ -143,7 +143,7 @@ doTitrationPlots <- function(tbl)
                   ggtitle(paste("Consensus Performance By", twoVars[1])))
             })
     }
-    
+
     # Take triples of variables, facet on first two and color by third
     if (length(variables) >= 3)
     {
@@ -194,7 +194,7 @@ doResidualErrorsPlot <- function(tbl)
     #MIN.COVERAGE <- 40
     ROUND.COVERAGE <- c(40, 60, 100)
     variables <- names(tbl)[grep("^p_", names(tbl))]
-    
+
     for (algorithm in levels(tbl$Algorithm))
     {
       varTypeCounts <- ddply(subset(tbl, Coverage %in% ROUND.COVERAGE & Algorithm==algorithm),
@@ -202,19 +202,19 @@ doResidualErrorsPlot <- function(tbl)
                              function(df) {
                                 res <- summarizedResidualErrors(as.character(df$MaskedVariantsFile))
                              })
-  
+
       ## This plot works with the old ggplot we have installed on the cluster
       ##plt <- qplot(ErrorMode, Freq, geom="bar", stat="identity", fill=Base, data=varTypeCounts)
-      
+
       ## This works with the new
       plt <- ggplot(data=varTypeCounts, mapping=aes(x=ErrorMode, y=Freq, fill=Base)) + geom_bar(stat="identity")
-      
+
       facet.formula <- as.formula(paste(paste(variables, collapse="*"), "~Genome*Coverage"))
-      plt.fix_y  <- (plt + facet_grid(facet.formula) 
+      plt.fix_y  <- (plt + facet_grid(facet.formula)
                      +  ggtitle(sprintf("Residual errors in %s consensus sequence (fixed y-axis)", algorithm)))
-      plt.free_y <- (plt + facet_grid(facet.formula, scale="free_y") 
+      plt.free_y <- (plt + facet_grid(facet.formula, scale="free_y")
                      + ggtitle(sprintf("Residual errors in %s consensus sequence (free y-axis)", algorithm)))
-  
+
       print(plt.fix_y)
       print(plt.free_y)
     }
