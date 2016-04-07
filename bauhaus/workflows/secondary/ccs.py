@@ -7,6 +7,8 @@ import os.path as op
 
 from bauhaus.experiment import InputType, ConditionTable, ResequencingConditionTable
 from bauhaus import Workflow
+from bauhaus.utils import listConcat
+
 from .datasetOps import *
 from .mapping import genMappingCCS
 
@@ -63,6 +65,7 @@ def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
 def genCCSAndMapping(pflow, subreadSets, reference):
     ccsSets = genChunkedCCS(pflow, subreadSets, doMerge=False)
     alignmentSets = genMappingCCS(pflow, ccsSets, reference)
+    return alignmentSets
 
 
 # -- CCS
@@ -111,7 +114,7 @@ class ChunkedCCSWorkflow(Workflow):
 # -- CCS mapping
 class CCSMappingWorkflow(Workflow):
     """
-    CCS + mappign
+    CCS + mapping
     """
     @staticmethod
     def name():
@@ -133,4 +136,24 @@ class CCSMappingWorkflow(Workflow):
 
 # -- CCS mapping + reports
 class CCSMappingReportsWorkflow(Workflow):
-    pass
+
+    @staticmethod
+    def name():
+        return "CCSMappingReports"
+
+    @staticmethod
+    def conditionTableType():
+        return ResequencingConditionTable
+
+    def generate(self, pflow, ct):
+        pflow.bundleScript("R/ccsMappingPlots.R")
+        ccsMappingOutputs = CCSMappingWorkflow().generate(pflow, ct)
+        flatOutputs = listConcat(ccsMappingOutputs.values())
+
+        ccsSummaryRule = pflow.genRuleOnce(
+            "ccsMappingSummaryAnalysis",
+            "Rscript --vanilla R/ccsMappingPlots.R .")
+        bs = pflow.genBuildStatement(
+            [ "ccs-mapping.pdf"],
+            "ccsMappingSummaryAnalysis",
+            flatOutputs)

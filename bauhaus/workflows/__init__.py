@@ -11,7 +11,8 @@ _workflows = [
     ChunkedCCSWorkflow,
     CCSMappingWorkflow,
     # Tertiary
-    CoverageTitrationReportsWorkflow ]
+    CoverageTitrationReportsWorkflow,
+    CCSMappingReportsWorkflow ]
 
 availableWorkflows = \
     { wf.name() : wf
