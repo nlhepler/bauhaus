@@ -1,4 +1,4 @@
-* Nowish [3/6]
+* Nowish [3/5]
 ** DONE Remove consensusAlgorithm business, make it "configure"-able
 ** DONE Make workflows into classes, factor it better
 ** DONE remove plurals
@@ -6,12 +6,11 @@
 ** TODO Move CT over to tertiary
 
 
-* Nowish 2 [1/4]
+* Nowish 2 [2/4]
 ** DONE Run ninja with -k;  tee to log file
+** DONE Make sure ninja task failures are handled correctly
 ** TODO Fix CCS dumbness 1: report is not a CSV file
 ** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
-
-** TODO Make sure ninja task failures are handled correctly
 
 
 * Laterish [0/6]
