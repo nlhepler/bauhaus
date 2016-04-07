@@ -65,7 +65,7 @@ class CoverageTitrationReportsWorkflow(Workflow):
         flatCtOuts = listConcat(ctOuts.values())
         ctSummaryRule = pflow.genRuleOnce(
             "coverageTitrationSummaryAnalysis",
-            "Rscript R/coverageTitrationPlots.R .")
+            "Rscript --vanilla R/coverageTitrationPlots.R .")
         bs = pflow.genBuildStatement(
             [ "coverage-titration.csv", "coverage-titration.pdf"],
             "coverageTitrationSummaryAnalysis",
