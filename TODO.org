@@ -6,10 +6,13 @@
 ** TODO Move CT over to tertiary
 
 
-* Nowish 2 [/]
-** TODO Run ninja with -k;  tee to log file
+* Nowish 2 [1/4]
+** DONE Run ninja with -k;  tee to log file
 ** TODO Fix CCS dumbness 1: report is not a CSV file
 ** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
+
+** TODO Make sure ninja task failures are handled correctly
+
 
 * Laterish [0/6]
 ** TODO Add a "config" capability to, for example, choose the consensus algo...
