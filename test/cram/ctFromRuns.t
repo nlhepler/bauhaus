@@ -61,7 +61,7 @@ as a small diff.
     command = gffsubtract.pl $in $referenceMask > $out
   
   rule coverageTitrationSummaryAnalysis
-    command = Rscript R/coverageTitrationPlots.R .
+    command = Rscript --vanilla R/coverageTitrationPlots.R .
   
   
   # Build targets
