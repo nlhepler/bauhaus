@@ -74,20 +74,3 @@ Let's try a very simple mapping job (no chunking)
       Ecoli/mapping/m54011_160306_050740.alignmentset.xml
   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
