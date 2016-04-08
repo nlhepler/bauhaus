@@ -65,162 +65,6 @@ as a small diff.
   
   
   # Build targets
-  build Lambda/subreads_chunks/m54008_160308_002050.chunk0.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk1.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk2.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk3.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk4.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk5.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk6.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_002050.chunk7.subreadset.xml: $
-      splitByZmw $
-      /pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml
-    outdir = Lambda/subreads_chunks
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk0.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk1.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk2.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk3.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk4.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk5.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk6.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_002050.chunk7.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping/m54008_160308_002050_preconsolidate.alignmentset.xml: $
-      mergeDatasetsForMovie $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml
-  
-  build Lambda/mapping/m54008_160308_002050.alignmentset.xml: $
-      consolidateDatasetsForMovie $
-      Lambda/mapping/m54008_160308_002050_preconsolidate.alignmentset.xml
-    outBam = Lambda/mapping/m54008_160308_002050.aligned_subreads.bam
-  
-  build Lambda/subreads_chunks/m54008_160308_053311.chunk0.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk1.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk2.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk3.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk4.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk5.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk6.subreadset.xml $
-      Lambda/subreads_chunks/m54008_160308_053311.chunk7.subreadset.xml: $
-      splitByZmw $
-      /pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml
-    outdir = Lambda/subreads_chunks
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk0.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk1.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk1.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk2.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk2.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk3.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk3.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk4.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk4.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk5.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk5.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk6.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk6.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping_chunks/m54008_160308_053311.chunk7.alignmentset.xml: $
-      map Lambda/subreads_chunks/m54008_160308_053311.chunk7.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping/m54008_160308_053311_preconsolidate.alignmentset.xml: $
-      mergeDatasetsForMovie $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk1.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk2.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk3.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk4.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk5.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk6.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_053311.chunk7.alignmentset.xml
-  
-  build Lambda/mapping/m54008_160308_053311.alignmentset.xml: $
-      consolidateDatasetsForMovie $
-      Lambda/mapping/m54008_160308_053311_preconsolidate.alignmentset.xml
-    outBam = Lambda/mapping/m54008_160308_053311.aligned_subreads.bam
-  
-  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
-      Lambda/mapping/m54008_160308_002050.alignmentset.xml $
-      Lambda/mapping/m54008_160308_053311.alignmentset.xml
-  
   build Ecoli/subreads_chunks/m54011_160305_235923.chunk0.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160305_235923.chunk1.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160305_235923.chunk2.subreadset.xml $
@@ -376,6 +220,162 @@ as a small diff.
   build Ecoli/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
       Ecoli/mapping/m54011_160305_235923.alignmentset.xml $
       Ecoli/mapping/m54011_160306_050740.alignmentset.xml
+  
+  build Lambda/subreads_chunks/m54008_160308_002050.chunk0.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk1.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk2.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk3.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk4.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk5.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk6.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_002050.chunk7.subreadset.xml: $
+      splitByZmw $
+      /pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml
+    outdir = Lambda/subreads_chunks
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk0.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk1.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk2.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk3.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk4.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk5.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk6.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_002050.chunk7.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping/m54008_160308_002050_preconsolidate.alignmentset.xml: $
+      mergeDatasetsForMovie $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml
+  
+  build Lambda/mapping/m54008_160308_002050.alignmentset.xml: $
+      consolidateDatasetsForMovie $
+      Lambda/mapping/m54008_160308_002050_preconsolidate.alignmentset.xml
+    outBam = Lambda/mapping/m54008_160308_002050.aligned_subreads.bam
+  
+  build Lambda/subreads_chunks/m54008_160308_053311.chunk0.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk1.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk2.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk3.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk4.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk5.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk6.subreadset.xml $
+      Lambda/subreads_chunks/m54008_160308_053311.chunk7.subreadset.xml: $
+      splitByZmw $
+      /pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml
+    outdir = Lambda/subreads_chunks
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk0.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk1.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk1.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk2.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk2.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk3.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk3.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk4.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk4.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk5.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk5.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk6.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk6.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping_chunks/m54008_160308_053311.chunk7.alignmentset.xml: $
+      map Lambda/subreads_chunks/m54008_160308_053311.chunk7.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping/m54008_160308_053311_preconsolidate.alignmentset.xml: $
+      mergeDatasetsForMovie $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk1.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk2.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk3.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk4.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk5.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk6.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_053311.chunk7.alignmentset.xml
+  
+  build Lambda/mapping/m54008_160308_053311.alignmentset.xml: $
+      consolidateDatasetsForMovie $
+      Lambda/mapping/m54008_160308_053311_preconsolidate.alignmentset.xml
+    outBam = Lambda/mapping/m54008_160308_053311.aligned_subreads.bam
+  
+  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
+      Lambda/mapping/m54008_160308_002050.alignmentset.xml $
+      Lambda/mapping/m54008_160308_053311.alignmentset.xml
   
   build Ecoli/variant_calling/alignments_summary.gff: summarize_coverage $
       Ecoli/mapping/all_movies.alignmentset.xml

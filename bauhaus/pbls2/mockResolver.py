@@ -2,6 +2,7 @@ __all__ = [ "MockResolver" ]
 
 import os.path as op
 from .resolver import _isRuncode
+from .exceptions import *
 
 class MockResolver(object):
     # For testing purposes
@@ -36,12 +37,12 @@ class MockResolver(object):
         return op.join(self.REFERENCE_MASKS_ROOT, referenceName + "-mask.gff")
 
     def resolveJob(self, smrtLinkServer, jobId):
-        lookup = { ("smrtlink-beta", 4110) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004110",
-                   ("smrtlink-beta", 4111) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004111",
-                   ("smrtlink-beta", 4183) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004183",
-                   ("smrtlink-beta", 4206) : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004206" }
+        lookup = { ("smrtlink-beta", "4110") : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004110",
+                   ("smrtlink-beta", "4111") : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004111",
+                   ("smrtlink-beta", "4183") : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004183",
+                   ("smrtlink-beta", "4206") : "/pbi/dept/secondary/siv/smrtlink/smrtlink-beta/smrtsuite/userdata/jobs_root/004/004206" }
         if (smrtLinkServer, jobId) not in lookup:
-            raise DataNotFound("Job not found: %s:%d" % (smrtLinkServer, jobId))
+            raise DataNotFound("Job not found: %s:%s" % (smrtLinkServer, jobId))
         else:
             return lookup[(smrtLinkServer, jobId)]
 

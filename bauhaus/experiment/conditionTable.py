@@ -5,23 +5,27 @@ __all__ = [ "InputType",
             "TableValidationError",
             "InputResolutionError" ]
 
-import pandas
-import os.path as op
+import csv, os.path as op, sys
+import eztable
+
+# TODO: we are using the non-public method ._get_columns on
+# eztable.Table objects.  That method should really be public--maybe
+# ask the maintainer?
 
 class TableValidationError(Exception): pass
 class InputResolutionError(Exception): pass
-
-class _DfHelpers(object):
-    @staticmethod
-    def pVariables(df):
-        return [ k for k in df.columns if k.startswith("p_") ]
-
 
 class InputType(object):
     SubreadSet            = 1
     AlignmentSet          = 2
     ConsensusReadSet      = 3
     ConsensusAlignmentSet = 4
+
+def _pVariables(tbl):
+    return [ k for k in tbl.column_names if k.startswith("p_") ]
+
+def _unique(lst):
+    return sorted(set(lst))
 
 class ConditionTable(object):
     """
@@ -38,9 +42,14 @@ class ConditionTable(object):
         if not op.isfile(inputCsv):
             raise ValueError("Missing input file: %s" % inputCsv)
         try:
-            self.df = pandas.read_csv(inputCsv)
+            with open(inputCsv) as f:
+                cr = csv.reader(f)
+                allRows = list(cr)
+                columnNames, rows = \
+                    allRows[0], allRows[1:]
+                self.tbl = eztable.Table(columnNames, rows)
         except:
-            raise InputValidationError("Input CSV file can't be read/parsed")
+            raise TableValidationError("Input CSV file can't be read/parsed")
         self._validateTable()
         self._resolveInputs(resolver)
 
@@ -66,12 +75,12 @@ class ConditionTable(object):
         for c in self.conditions:
             condition = self.condition(c)
             for variable in self.variables:
-                if len(condition[variable].unique()) != 1:
+                if len(set(condition._get_column(variable))) != 1:
                     raise TableValidationError(
                         "Conditions must be homogeneous---no variation in variables within a condition")
 
     def _validateSingleInputEncoding(self):
-        cols = self.df.columns
+        cols = self.tbl.column_names
         inputEncodings = 0
         if {"ReportsPath"}.issubset(cols):
             inputEncodings += 1
@@ -89,14 +98,11 @@ class ConditionTable(object):
             raise TableValidationError("Condition table can only represent input data in one way")
 
     def _resolveInput(self, resolver, rowRecord):
-        cols = self.df.columns
+        cols = self.tbl.column_names
         if {"ReportsPath"}.issubset(cols):
             raise NotImplementedError
         elif {"RunCode", "ReportsFolder"}.issubset(cols):
-            # Is there a better way?  Maybe make resolvePrimaryPath recognize NaN?
-            if pandas.isnull(rowRecord.ReportsFolder): reports = ""
-            else: reports = rowRecord.ReportsFolder
-            return resolver.resolveSubreadSet(rowRecord.RunCode, reports)
+            return resolver.resolveSubreadSet(rowRecord.RunCode, rowRecord.ReportsFolder)
         elif {"RunCode", "ReportsFolderH5"}.issubset(cols):
             raise NotImplementedError
         elif {"SMRTLinkServer", "JobId"}.issubset(cols):
@@ -109,24 +115,24 @@ class ConditionTable(object):
         for condition in self.conditions:
             subDf = self.condition(condition)
             inputs = []
-            for row in subDf.to_records():
+            for row in subDf:
                 inputs.append(self._resolveInput(resolver, row))
             self._inputsByCondition[condition] = inputs
 
     @property
     def conditions(self):
-        return self.df.Condition.unique()
+        return _unique(self.tbl.Condition)
 
     def condition(self, condition):
         # Get subtable for condition
-        return self.df[self.df.Condition == condition]
+        return self.tbl.restrict(("Condition",), lambda x: x == condition)
 
     @property
     def pVariables(self):
         """
         "p variables" encoded in the condition table using column names "p_*"
         """
-        return _DfHelpers.pVariables(self.df)
+        return _pVariables(self.tbl)
 
     @property
     def variables(self):
@@ -138,14 +144,16 @@ class ConditionTable(object):
     def variable(self, condition, variableName):
         """
         Get the value of a variable within a condition
+
+        # TODO: we are using a non-public API method in eztable!
         """
-        vals = self.condition(condition)[variableName].unique()
+        vals = _unique(self.condition(condition)._get_column(variableName))
         assert len(vals) == 1
         return vals[0]
 
     @property
     def inputType(self):
-        cols = self.df.columns
+        cols = self.tbl.column_names
         if {"ReportsPath"}.issubset(cols) or \
            {"RunCode", "ReportsFolder"}.issubset(cols):
             return InputType.SubreadSet
@@ -163,8 +171,8 @@ class ResequencingConditionTable(ConditionTable):
     resequencing-bases analyses (require a reference, use mapping)
     """
     def _validateGenomeColumnPresent(self):
-        if "Genome" not in self.df.columns:
-            raise InputValidationError("'Genome' column must be present")
+        if "Genome" not in self.tbl.column_names:
+            raise TableValidationError("'Genome' column must be present")
 
     def _validateTable(self):
         """
@@ -193,7 +201,7 @@ class ResequencingConditionTable(ConditionTable):
         Use the condition table to look up the correct "Genome" based on
         the condition name
         """
-        genomes = self.condition(condition).Genome.unique()
+        genomes = _unique(self.condition(condition).Genome)
         assert len(genomes) == 1
         return genomes[0]
 
@@ -204,8 +212,8 @@ class ResequencingConditionTable(ConditionTable):
 class CoverageTitrationConditionTable(ResequencingConditionTable):
 
     def _validateAtLeastOnePVariable(self):
-        if len(_DfHelpers.pVariables(self.df)) < 1:
-            raise InputValidationError(
+        if len(_pVariables(self.tbl)) < 1:
+            raise TableValidationError(
                 'There must be at least one covariate ("p_" variable) in the condition table')
 
     def _validateTable(self):

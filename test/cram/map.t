@@ -41,22 +41,6 @@ Let's try a very simple mapping job (no chunking)
   
   
   # Build targets
-  build Lambda/mapping/m54008_160308_002050.alignmentset.xml: map $
-      /pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping/m54008_160308_053311.alignmentset.xml: map $
-      /pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml
-    ncpus = 8
-    reference = $
-        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
-  
-  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
-      Lambda/mapping/m54008_160308_002050.alignmentset.xml $
-      Lambda/mapping/m54008_160308_053311.alignmentset.xml
-  
   build Ecoli/mapping/m54011_160305_235923.alignmentset.xml: map $
       /pbi/collections/315/3150122/r54011_20160305_235615/1_A01/m54011_160305_235923.subreadset.xml
     ncpus = 8
@@ -72,5 +56,21 @@ Let's try a very simple mapping job (no chunking)
   build Ecoli/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
       Ecoli/mapping/m54011_160305_235923.alignmentset.xml $
       Ecoli/mapping/m54011_160306_050740.alignmentset.xml
+  
+  build Lambda/mapping/m54008_160308_002050.alignmentset.xml: map $
+      /pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping/m54008_160308_053311.alignmentset.xml: map $
+      /pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml
+    ncpus = 8
+    reference = $
+        /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+  
+  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
+      Lambda/mapping/m54008_160308_002050.alignmentset.xml $
+      Lambda/mapping/m54008_160308_053311.alignmentset.xml
   
 
