@@ -1,0 +1,12 @@
+machine:
+  python:
+    version: 2.7.6
+
+dependencies:
+  pre:
+    - sudo apt-get install tree
+    - pip install -r requirements-test.txt
+
+test:
+  override:
+    - make test

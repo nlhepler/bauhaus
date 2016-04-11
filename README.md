@@ -1,15 +1,13 @@
 
   ![bauhaus logo](./doc/img/bauhaus.png)
 
-## What is this?
+  [![Circle CI](https://circleci.com/gh/dalexander/bauhaus.svg?style=svg)](https://circleci.com/gh/dalexander/bauhaus)
 
    `bauhaus` is a prototype implementation of a minimal
    tertiary-analysis system for use in-house at PacBio.  It is not
    intended as an official solution, but more as an experimental
    playground for some ideas about how users can specify input and
-   analyis conditions.  *I'm really getting sick of typeless
-   programming languages so this is probably due for a rewrite in a
-   real language quite soon.*
+   analyis conditions.
 
    `bauhaus` is best understood as a *compiler*.  It accepts the
    user's specification of the experiment (a CSV table with a
