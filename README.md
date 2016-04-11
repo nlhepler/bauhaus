@@ -1,7 +1,7 @@
 
   ![bauhaus logo](./doc/img/bauhaus.png)
 
-  [![Circle CI](https://circleci.com/gh/dalexander/bauhaus/tree/ci.svg?style=svg)](https://circleci.com/gh/dalexander/bauhaus/tree/ci)
+  [![Circle CI](https://circleci.com/gh/dalexander/bauhaus.svg?style=svg)](https://circleci.com/gh/dalexander/bauhaus)
 
    `bauhaus` is a prototype implementation of a minimal
    tertiary-analysis system for use in-house at PacBio.  It is not
