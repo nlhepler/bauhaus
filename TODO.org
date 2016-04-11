@@ -1,19 +1,16 @@
-* Nowish [3/5]
-** DONE Remove consensusAlgorithm business, make it "configure"-able
-** DONE Make workflows into classes, factor it better
-** DONE remove plurals
-** WAIT Get CCS analysis working!
-** TODO Move CT over to tertiary
+* Nowish [4/5]
+** TODO Remove pandas and numpy deps--way too heavyweight!
+** TODO Make VE available on cluster
+** TODO Make R extensions we need available on cluster
 
-
-* Nowish 2 [2/4]
-** DONE Run ninja with -k;  tee to log file
-** DONE Make sure ninja task failures are handled correctly
+* Laterish [0/6]
 ** TODO Fix CCS dumbness 1: report is not a CSV file
 ** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
 
 
-* Laterish [0/6]
+** TODO Move CT over to tertiary
+
+
 ** TODO Add a "config" capability to, for example, choose the consensus algo...
 
 ** TODO Get rid of the context stack, it doesn't really buy us anything
