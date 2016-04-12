@@ -133,7 +133,7 @@ using the `ninja -t graph` command and graphviz:
 
 
   ```sh
-  $ ninja -C experiment1 -t graph > build.dot && dot -Tpng build.dot > build.png
+  $ ninja -C experiment1 -t graph | dot -Tpng > build.png
   ```
 
 Here's the `build.png`:
