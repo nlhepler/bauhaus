@@ -81,7 +81,7 @@ and our workflow will execute.  Let's see how that works:
   module purge
   module load smrtanalysis/mainline
   module load gfftools/dalexander
-  module load R/3.2.3-experimental
+  module load R/3.2.3-bauhaus
 
   THISDIR=$(cd "$(dirname "$0")" && pwd)
   cd $THISDIR
@@ -124,12 +124,14 @@ The ninja script specifies quite explicitly the commands to run in
 order to make the workflow "go".  Commands are run on the cluster
 where appropriate, but "synchronously" so that the foreground terminal
 never loses control---if you do `Ctrl-C` after starting `run.sh`, the
-workflow will shut down immediately.
+workflow will shut down immediately.  And, naturally, if we restart
+the ninja run after this, it will pick up where it left
+off---resumption "just works" in ninja.
 
-One of the nice things about using an external build script format is
-that we can leverage some of the tooling that others have developed.
-So for example, we can see a graph of what this workflow will do,
-using the `ninja -t graph` command and graphviz:
+Another benefit of using an external build script format is that we
+can leverage some of the tooling that others have developed.  So for
+example, we can see a graph of what this workflow will do, using the
+`ninja -t graph` command and graphviz:
 
 
   ```sh
