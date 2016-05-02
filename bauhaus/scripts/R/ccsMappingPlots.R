@@ -42,7 +42,7 @@ makeCCSDataFrame1 <- function(datasetXmlFile, conditionName, sampleFraction=1.0)
     } else {
         sampledBams <- allBams
     }
-    pbis <- lapply(sampledBams, pbbamr::loadpbi,
+    pbis <- lapply(sampledBams, pbbamr::loadPBI,
                    loadSNR = TRUE, loadNumPasses = TRUE, loadRQ = TRUE)
     ## This would be more efficient, but it crashes!
     ##do.call(bind_rows, sampledBams)
