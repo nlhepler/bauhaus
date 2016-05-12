@@ -3,6 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(xml2)
 library(stringr)
+library(feather)
 
 toPhred <- function(acc, maximum=60) {
     err = pmax(1-acc, 10^(-maximum/10))
@@ -61,6 +62,7 @@ makeCCSDataFrame1 <- function(datasetXmlFile, conditionName, sampleFraction=1.0)
              ReadQualityPhred = toPhred(qual),
              Identity = matches/(tend-tstart),
              IdentityPhred = toPhred(matches/(tend-tstart)),
+             NumErrors=(mismatches+inserts+dels),
              TemplateSpan=(tend-tstart),
              ReadLength=(aend-astart),          ## <-- this is a lie, see above!
              SnrA = snrA,
@@ -135,16 +137,14 @@ doCCSReadQualityCalibrationPlots <- function(ccsDf)
 
 doCCSTitrationPlots <- function(ccsDf)
 {
-    p <- qplot(NumPasses, Identity, alpha=I(0.1), data=ccsDf) + geom_smooth() +
-        facet_grid(.~Condition) +
-        ggtitle("Empirical CCS accuracy by NumPasses")
-    print(p)
+     accVsNp <- ccsDf %>% group_by(Condition, NumPasses) %>% summarize(
+       MeanIdentity=1-(max(1, sum(NumErrors))/sum(ReadLength)),
+       TotalBases=sum(ReadLength)) %>% mutate(
+       MeanIdentityPhred=toPhred(MeanIdentity))
 
-    p <- qplot(NumPasses, IdentityPhred, alpha=I(0.1), data=ccsDf) + geom_smooth() +
-        facet_grid(.~Condition) +
-        ggtitle("Empirical CCS accuracy (QV scale) by NumPasses")
-    print(p)
-
+     p <- qplot(NumPasses, MeanIdentityPhred, size=TotalBases, weight=TotalBases, data=filter(accVsNp, NumPasses<20)) +
+         facet_grid(.~Condition) + geom_smooth()
+     print(p)
 }
 
 
@@ -157,24 +157,24 @@ doAllCCSPlots <- function(ccsDf)
     doCCSCumulativeYieldPlots(ccsDf)
 }
 
-main <- function()
+
+## Main, when run as a script.
+if (!interactive())
 {
     args <- commandArgs(TRUE)
     wfRootDir <- args[1]
-
-    ccsDf <- makeCCSDataFrame(wfRootDir, sampleFraction=0.2)
-
+    ccsDf <- makeCCSDataFrame(wfRootDir)
+    ##write.csv(ccsDf, "ccs-mapping.csv")  ## TOO BIG, TOO SLOW
+    write_feather(ccsDf, "ccs-mapping.feather")
     pdf("ccs-mapping.pdf", 11, 8.5)
     doAllCCSPlots(ccsDf)
     dev.off()
 }
 
-main()
 
 
 
-
-if (0) {
-    wfRoot = "/home/UNIXHOME/dalexander/Projects/rsync/bauhaus/ccsMap/"
-    df <- makeCCSDataFrame(wfRoot, 0.2)
+if (1) {
+    wfRoot = "/home/UNIXHOME/dalexander/Projects/Analysis/EchidnaConsensus/2kLambda_4hr_postTrain_CCS/"
+    df <- makeCCSDataFrame(wfRoot, 1.0)
 }
