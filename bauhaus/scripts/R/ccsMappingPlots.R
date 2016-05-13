@@ -172,9 +172,7 @@ if (!interactive())
 }
 
 
-
-
-if (1) {
+if (0) {
     wfRoot = "/home/UNIXHOME/dalexander/Projects/Analysis/EchidnaConsensus/2kLambda_4hr_postTrain_CCS/"
     df <- makeCCSDataFrame(wfRoot, 1.0)
 }
