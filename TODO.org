@@ -1,7 +1,22 @@
-* Nowish [4/5]
-** TODO Remove pandas and numpy deps--way too heavyweight!
-** TODO Make VE available on cluster
-** TODO Make R extensions we need available on cluster
+* From Alicia
+  - Make it a web page instead of a giant PDF
+
+   - Make a subreads dir that symlinks the subreads datasets (or absolutifies, actually)
+     - change condition table to have: .remoteSubreads, .subreads ... maybe?
+
+   - Make a basic subreads reports workflow
+   - Make a basic mapping reports workflow
+
+   - Output the CCS report correctly
+   - Output the ccsdf csv
+
+
+* Nowish [3/3]
+** DONE Remove pandas and numpy deps--way too heavyweight!
+** DONE Make VE available on cluster
+** DONE Make R extensions we need available on cluster
+
+
 
 * Laterish [0/6]
 ** TODO Fix CCS dumbness 1: report is not a CSV file
