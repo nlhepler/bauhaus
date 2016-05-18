@@ -123,6 +123,8 @@ doCCSNumPassesCDF <- function(ccsDf)
 
 doCCSReadQualityCalibrationPlots <- function(ccsDf)
 {
+    ccsDf <- sample_n(ccsDf, 5000)
+
     p <- qplot(ReadQuality, Identity, alpha=I(0.1), data=ccsDf) + facet_grid(.~Condition) +
         geom_abline(slope=1, color="red") +
         ggtitle("Read quality versus empirical accuracy")
@@ -173,6 +175,7 @@ if (!interactive())
 
 
 if (0) {
-    wfRoot = "/home/UNIXHOME/dalexander/Projects/Analysis/EchidnaConsensus/2kLambda_4hr_postTrain_CCS/"
+    ##wfRoot = "/home/UNIXHOME/dalexander/Projects/Analysis/EchidnaConsensus/2kLambda_4hr_postTrain_CCS/"
+    wfRoot <- "/home/UNIXHOME/ayang/projects/bauhaus/Echidna_PerfVer/EchidnaVer_CCS_postTrain"
     df <- makeCCSDataFrame(wfRoot, 1.0)
 }
