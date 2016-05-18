@@ -1,4 +1,6 @@
 * From Alicia
+** DONE Fix CCS dumbness 1: report is not a CSV file
+** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
   - Make it a web page instead of a giant PDF
 
    - Make a subreads dir that symlinks the subreads datasets (or absolutifies, actually)
@@ -11,17 +13,11 @@
    - Output the ccsdf csv
 
 
-* Nowish [3/3]
-** DONE Remove pandas and numpy deps--way too heavyweight!
-** DONE Make VE available on cluster
-** DONE Make R extensions we need available on cluster
-
-
+** DONE CCS: Make the calibration plots subsample
+** TODO GC: Error out in validation if num P_ variables too high
+** TODO GC: Make the
 
 * Laterish [0/6]
-** TODO Fix CCS dumbness 1: report is not a CSV file
-** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
-
 
 ** TODO Move CT over to tertiary
 
