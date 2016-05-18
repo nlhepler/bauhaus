@@ -20,6 +20,7 @@ class InputType(object):
     AlignmentSet          = 2
     ConsensusReadSet      = 3
     ConsensusAlignmentSet = 4
+    HDF5Subreads          = 5
 
 def _pVariables(tbl):
     return [ k for k in tbl.column_names if k.startswith("p_") ]
