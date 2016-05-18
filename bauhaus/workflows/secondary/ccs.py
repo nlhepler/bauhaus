@@ -15,13 +15,14 @@ from .mapping import genMappingCCS
 def genCCS(pflow, subreadSets):
     ccsRule = pflow.genRuleOnce(
         "ccs",
-        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus $in $outBam && " +
+        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus --reportFile=$ccsDiagnostics $in $outBam && " +
         "dataset create --type ConsensusReadSet $out $outBam")
     ccsSets = []
     for subreadSet in subreadSets:
         with pflow.context("movieName", movieName(subreadSet)):
             outBam = pflow.formatInContext("{condition}/ccs/{movieName}.ccs.bam")
-            buildVariables = dict(outBam=outBam, ncpus=8)
+            ccsDiagnostics= pflow.formatInContext("{condition}/{movieName}.ccs-report.txt")
+            buildVariables = dict(outBam=outBam, ncpus=8, ccsDiagnostics=ccsDiagnostics)
             ccsSets.extend(pflow.genBuildStatement(
                 ["{condition}/ccs/{movieName}.consensusreadset.xml"],
                 "ccs",
@@ -32,7 +33,7 @@ def genCCS(pflow, subreadSets):
 def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
     ccsRule = pflow.genRuleOnce(
         "ccs",
-        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus $in $outBam && " +
+        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus --reportFile=$ccsDiagnostics $in $outBam && " +
         "dataset create --type ConsensusReadSet $out $outBam")
     ccsSets = []
     for subreadSet in subreadSets:
@@ -42,7 +43,8 @@ def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
             for (i, subreadSetChunk) in enumerate(subreadSetChunks):
                 with pflow.context("chunkNum", i):
                     outBam = pflow.formatInContext("{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.ccs.bam")
-                    buildVariables = dict(outBam=outBam, ncpus=8)
+                    ccsDiagnostics = pflow.formatInContext("{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.ccs-report.txt")
+                    buildVariables = dict(outBam=outBam, ncpus=8, ccsDiagnostics=ccsDiagnostics)
                     buildStmt = pflow.genBuildStatement(
                         ["{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.consensusreadset.xml"],
                         "ccs",
