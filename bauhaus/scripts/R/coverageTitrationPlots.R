@@ -172,7 +172,9 @@ doCoverageDiagnosticsPlot <- function(tbl)
           ggtitle("1-percentile coverage level by Condition"))
 }
 
-doResidualErrorsPlot <- function(tbl)
+
+
+makeResidualsTable <- function(ccsDf, variables)
 {
     ## Plots of residual error modes
     tbl <- tbl[!tbl$ShouldCensor,]
@@ -193,40 +195,40 @@ doResidualErrorsPlot <- function(tbl)
 
     #MIN.COVERAGE <- 40
     ROUND.COVERAGE <- c(40, 60, 100)
-    variables <- names(tbl)[grep("^p_", names(tbl))]
+    varTypeCounts <- ddply(
+        subset(tbl, Coverage %in% ROUND.COVERAGE),
+        append(c("Condition", "Algorithm", "Coverage", "MaskedVariantsFile", "Genome"), variables),
+        function(df) {
+            res <- summarizedResidualErrors(as.character(df$MaskedVariantsFile))
+        })
+}
 
-    for (algorithm in levels(tbl$Algorithm))
-    {
-      varTypeCounts <- ddply(subset(tbl, Coverage %in% ROUND.COVERAGE & Algorithm==algorithm),
-                             append(c("Condition", "Algorithm", "Coverage", "MaskedVariantsFile", "Genome"), variables),
-                             function(df) {
-                                res <- summarizedResidualErrors(as.character(df$MaskedVariantsFile))
-                             })
+doResidualErrorsPlot <- function(varTypeCounts, variables)
+{
+    for (coverage in unique(varTypeCounts$Coverage)) {
+        plt <- (ggplot(data=varTypeCounts[varTypeCounts$Coverage==coverage,],
+                      mapping=aes(x=ErrorMode, y=Freq, fill=Base)) + geom_bar(stat="identity") +
+                theme(axis.text.x = element_text(angle = 75, hjust = 1)))
 
-      ## This plot works with the old ggplot we have installed on the cluster
-      ##plt <- qplot(ErrorMode, Freq, geom="bar", stat="identity", fill=Base, data=varTypeCounts)
+        facet.formula <- as.formula(".~Condition")
+        plt.fix_y  <- (plt + facet_grid(facet.formula)
+                       +  ggtitle(sprintf("Residual errors in %dx consensus sequence (fixed y-axis)", coverage)))
+        plt.free_y <- (plt + facet_grid(facet.formula, scale="free_y")
+                       + ggtitle(sprintf("Residual errors in %dx consensus sequence (free y-axis)", coverage)))
 
-      ## This works with the new
-      plt <- ggplot(data=varTypeCounts, mapping=aes(x=ErrorMode, y=Freq, fill=Base)) + geom_bar(stat="identity")
-
-      facet.formula <- as.formula(paste(paste(variables, collapse="*"), "~Genome*Coverage"))
-      plt.fix_y  <- (plt + facet_grid(facet.formula)
-                     +  ggtitle(sprintf("Residual errors in %s consensus sequence (fixed y-axis)", algorithm)))
-      plt.free_y <- (plt + facet_grid(facet.formula, scale="free_y")
-                     + ggtitle(sprintf("Residual errors in %s consensus sequence (free y-axis)", algorithm)))
-
-      print(plt.fix_y)
-      print(plt.free_y)
+        print(plt.fix_y)
+        print(plt.free_y)
     }
 }
 
 
-main <- function()
+if (!interactive())
 {
     args <- commandArgs(TRUE)
     wfRootDir <- args[1]
-    ##wfRootDir <- "/home/UNIXHOME/dalexander/Projects/rsync/bauhaus/CT1"
     tbl <- makeCoverageTitrationTable(wfRootDir)
+    variables <- names(tbl)[grep("^p_", names(tbl))]
+    residualsTable <- makeResidualsTable(tbl, variables)
 
     ## Dump the ctt table
     write.csv(tbl, file="coverage-titration.csv")
@@ -235,9 +237,23 @@ main <- function()
     pdf("coverage-titration.pdf", 11, 8.5)
     doTitrationPlots(tbl)
     doCoverageDiagnosticsPlot(tbl)
-    doResidualErrorsPlot(tbl)
+    doResidualErrorsPlot(residualsTable, variables)
     dev.off()
 }
 
 
-main()
+
+
+if(0) {
+
+    wfRootDir <- "/home/UNIXHOME/ayang/projects/bauhaus/Echidna_PerfVer/6kecoli_2hrImmob_postTrain_CoverageTitration"
+    tbl <- makeCoverageTitrationTable(wfRootDir)
+
+    pdf("/tmp/coverage-titration.pdf", 11, 8.5)
+    variables <- names(tbl)[grep("^p_", names(tbl))]
+    residualsTable <- makeResidualsTable(tbl)
+    doResidualErrorsPlot(residualsTable, variables)
+    dev.off()
+
+
+}
