@@ -20,7 +20,6 @@ class InputType(object):
     AlignmentSet          = 2
     ConsensusReadSet      = 3
     ConsensusAlignmentSet = 4
-    HDF5Subreads          = 5
 
 def _pVariables(tbl):
     return [ k for k in tbl.column_names if k.startswith("p_") ]
@@ -87,8 +86,6 @@ class ConditionTable(object):
             inputEncodings += 1
         if {"RunCode", "ReportsFolder"}.issubset(cols):
             inputEncodings += 1
-        if {"RunCode", "ReportsFolderH5"}.issubset(cols):
-            inputEncodings += 1
         if {"SMRTLinkServer", "JobId"}.issubset(cols):
             inputEncodings += 1
         if {"JobPath"}.issubset(cols):
@@ -104,8 +101,6 @@ class ConditionTable(object):
             raise NotImplementedError
         elif {"RunCode", "ReportsFolder"}.issubset(cols):
             return resolver.resolveSubreadSet(rowRecord.RunCode, rowRecord.ReportsFolder)
-        elif {"RunCode", "ReportsFolderH5"}.issubset(cols):
-            raise NotImplementedError
         elif {"SMRTLinkServer", "JobId"}.issubset(cols):
             return resolver.resolveAlignmentSet(rowRecord.SMRTLinkServer, rowRecord.JobId)
         elif {"JobPath"}.issubset(cols):

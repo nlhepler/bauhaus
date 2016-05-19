@@ -26,19 +26,12 @@ def genSubreads(pflow, remoteSubreadSets):
         localSubreadSets.extend(subreadCopyStmt.outputs)
     return localSubreadSets
 
-def genSubreadsFromH5(pflow, remoteBaxen):
-    raise NotImplementedError
-
-
 # ----
 
 class BasicSubreadsWorkflow(Workflow):
     """
-    Generate subreads datasets under a directory within the worfkflow.
-
-    When the original input is BAM this is effectively just a copy
-    (while fixing relative paths); when the original input is HDF5, we
-    bax2bam it here.
+    Generate subreads datasets under a directory within the worfkflow,
+    fixing relative paths
     """
     @staticmethod
     def name():
@@ -56,9 +49,6 @@ class BasicSubreadsWorkflow(Workflow):
                     remoteSubreadSets = ct.inputs(condition)
                     localSubreadSets = genSubreads(pflow, remoteSubreadSets)
                     outputDict[condition] = localSubreadSets
-                elif ct.inputType == InputType.HDF5Subreads:
-                    # bax2bam it
-                    raise NotImplementedError
                 else:
                     raise NotImplementedError, "Support not yet implemented for this input type"
         return outputDict

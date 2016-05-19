@@ -10,8 +10,8 @@
    where you could navigate to comparison plots/reports of interest.
 
    *pbexperiment* is an attempt to codify the input specification for
-   a Milhouse-like system, but with support for both current (BAM) and
-   legacy (HDF5) PacBio data as input.
+   a Milhouse-like system, but with support for both current BAM
+   PacBio data.
 
    /pbexperiment is not intended to be compatible with Milhouse, but
    rather for a future Milhouse replacement or for other tertiary
@@ -57,11 +57,7 @@
       - =RunCode= and =ReportsFolder= (subdirectory of run directory), /xor/
       - =ReportsPath=
 
-    Legacy primary analysis data (=bax.h5= files) can be used as input as
-    well---during analysis it will undergo conversion to BAM format.  The
-    columns used to specify legacy input data are
-      - =RunCode= and =ReportsFolderH5= /xor/
-      - =ReportsPathH5=
+    Legacy primary analysis data is (=bax.h5= files) is *not* supported.
 
     *Input data can only be specified in one way within a condition
     table.* This limitation means, for example, that primary data and
