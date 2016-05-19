@@ -1,6 +1,6 @@
 * From Alicia
 ** DONE Fix CCS dumbness 1: report is not a CSV file
-** TODO Fix CCS dumbness 2: report should go alongside output dataset/BAM
+** DONE Fix CCS dumbness 2: report should go alongside output dataset/BAM
   - Make it a web page instead of a giant PDF
 
    - Make a subreads dir that symlinks the subreads datasets (or absolutifies, actually)
@@ -14,8 +14,9 @@
 
 
 ** DONE CCS: Make the calibration plots subsample
+** DONE GC: Fix the residual plots
 ** TODO GC: Error out in validation if num P_ variables too high
-** TODO GC: Make the
+
 
 * Laterish [0/6]
 
