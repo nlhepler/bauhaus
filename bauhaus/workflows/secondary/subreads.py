@@ -14,7 +14,7 @@ def genSubreads(pflow, remoteSubreadSets):
     """
     copyRule = pflow.genRuleOnce(
         "copySubreadsDataset",
-        "dataset create $in $out")
+        "dataset create $out $in")
     localSubreadSets = []
     for rss in remoteSubreadSets:
         bn = op.basename(rss)
