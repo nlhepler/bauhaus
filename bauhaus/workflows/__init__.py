@@ -1,18 +1,9 @@
 from bauhaus.workflows.secondary import *
 from bauhaus.workflows.tertiary  import *
 
-_workflows = [
-    # Secondary
-    BasicMappingWorkflow,
-    ChunkedMappingWorkflow,
-    VariantCallingWorkflow,
-    CoverageTitrationWorkflow,
-    BasicCCSWorkflow,
-    ChunkedCCSWorkflow,
-    CCSMappingWorkflow,
-    # Tertiary
-    CoverageTitrationReportsWorkflow,
-    CCSMappingReportsWorkflow ]
+_workflows = [ eval(wfName)
+               for wfName in dir()
+               if wfName.endswith("Workflow") ]
 
 availableWorkflows = \
     { wf.name() : wf

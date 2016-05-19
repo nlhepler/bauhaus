@@ -1,12 +1,10 @@
-__all__ = [ "BasicMappingWorkflow", "ChunkedMappingWorkflow"]
+__all__ = [ "BasicSubreadsWorkflow" ]
 
 import os.path as op
 
 from bauhaus import Workflow
 from .datasetOps import *
-from bauhaus.experiment import (InputType, ResequencingConditionTable)
-
-
+from bauhaus.experiment import (InputType, ConditionTable)
 
 # These will be run within a condition...
 
@@ -17,23 +15,26 @@ def genSubreads(pflow, remoteSubreadSets):
     copyRule = pflow.genRuleOnce(
         "copySubreadsDataset",
         "dataset create $in $out")
+    localSubreadSets = []
     for rss in remoteSubreadSets:
-        localName = "{condition}/subreads/%s" % bn
         bn = op.basename(rss)
+        localName = "{condition}/subreads/%s" % bn
         subreadCopyStmt = pflow.genBuildStatement(
             ["{condition}/subreads/%s" % bn],
-            "copyRule"
+            "copySubreadsDataset",
             [rss])
+        localSubreadSets.extend(subreadCopyStmt.outputs)
+    return localSubreadSets
 
 def genSubreadsFromH5(pflow, remoteBaxen):
-    pass
+    raise NotImplementedError
 
 
 # ----
 
-class BasicSubreadsWorflow(Workflow)
+class BasicSubreadsWorkflow(Workflow):
     """
-    Generate subreads datasets under a directory here.
+    Generate subreads datasets under a directory within the worfkflow.
 
     When the original input is BAM this is effectively just a copy
     (while fixing relative paths); when the original input is HDF5, we
@@ -45,7 +46,7 @@ class BasicSubreadsWorflow(Workflow)
 
     @staticmethod
     def conditionTableType():
-        return conditionTableType
+        return ConditionTable
 
     def generate(self, pflow, ct):
         outputDict = {}
@@ -53,9 +54,11 @@ class BasicSubreadsWorflow(Workflow)
             with pflow.context("condition", condition):
                 if ct.inputType == InputType.SubreadSet:
                     remoteSubreadSets = ct.inputs(condition)
+                    localSubreadSets = genSubreads(pflow, remoteSubreadSets)
+                    outputDict[condition] = localSubreadSets
                 elif ct.inputType == InputType.HDF5Subreads:
                     # bax2bam it
-
+                    raise NotImplementedError
                 else:
                     raise NotImplementedError, "Support not yet implemented for this input type"
         return outputDict
