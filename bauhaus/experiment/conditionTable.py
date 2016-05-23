@@ -98,7 +98,7 @@ class ConditionTable(object):
     def _resolveInput(self, resolver, rowRecord):
         cols = self.tbl.column_names
         if {"ReportsPath"}.issubset(cols):
-            raise NotImplementedError
+            return resolver.findSubreadSet(rowRecord.ReportsPath)
         elif {"RunCode", "ReportsFolder"}.issubset(cols):
             return resolver.resolveSubreadSet(rowRecord.RunCode, rowRecord.ReportsFolder)
         elif {"SMRTLinkServer", "JobId"}.issubset(cols):

@@ -8,6 +8,7 @@ try:
 except: # Py3K
     from urllib.parse import urlparse
 
+from .exceptions import DataNotFound, ResolverFailure
 
 # We use the nibbler service to lookup run-codes until there is an
 # alternative means.  We shouldn't use it to look up jobs.
@@ -81,14 +82,20 @@ class Resolver(object):
         """
         return op.join(self.resolveRunCode(runCode), reportsFolder)
 
-    def resolveSubreadSet(self, runCode, reportsFolder=""):
-        reportsPath = self.resolvePrimaryPath(runCode, reportsFolder)
+    def findSubreadSet(self, reportsPath):
+        """
+        Given the reports path, find the subreadset within
+        """
         subreadsFnames = glob(op.join(reportsPath, "*.subreadset.xml"))
         if len(subreadsFnames) < 1:
             raise DataNotFound("SubreadSet not found in %s" % reportsPath)
         elif len(subreadsFnames) > 1:
             raise DataNotFound("Multiple SubreadSets present: %s" % reportsPath)
         return subreadsFnames[0]
+
+    def resolveSubreadSet(self, runCode, reportsFolder=""):
+        reportsPath = self.resolvePrimaryPath(runCode, reportsFolder)
+        return self.findSubreadSet(self, reportsPath)
 
     def resolveReference(self, referenceName):
         referenceFasta = op.join(self.REFERENCES_ROOT, referenceName, "sequence", referenceName + ".fasta")
