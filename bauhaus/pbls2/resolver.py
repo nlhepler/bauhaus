@@ -8,7 +8,7 @@ try:
 except: # Py3K
     from urllib.parse import urlparse
 
-from .exceptions import DataNotFound, ResolverFailure
+from .exceptions import DataNotFound, ResolverFailure, InvalidDataset
 
 # We use the nibbler service to lookup run-codes until there is an
 # alternative means.  We shouldn't use it to look up jobs.
@@ -145,3 +145,19 @@ class Resolver(object):
     def resolveAlignmentSet(self, smrtLinkServer, jobId):
         jobDir = self.resolveJob(smrtLinkServer, jobId)
         return self.findAlignmentSet(jobDir)
+
+    def ensureSubreadSet(self, subreadSet):
+        if not subreadSet.endswith(".subreadset.xml"):
+            raise InvalidDataset, "%s not a subreadset"
+        elif not op.isfile(subreadSet):
+            raise DataNotFound, "SubreadSet %s not found" % subreadSet
+        else:
+            return subreadSet
+
+    def ensureAlignmentSet(self, alignmentSet):
+        if not alignmentSet.endswith(".alignmentset.xml"):
+            raise InvalidDataset, "%s not an alignmentset"
+        elif not op.isfile(alignmentSet):
+            raise DataNotFound, "AlignmentSet %s not found" % alignmentSet
+        else:
+            return alignmentSet

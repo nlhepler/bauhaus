@@ -90,6 +90,10 @@ class ConditionTable(object):
             inputEncodings += 1
         if {"JobPath"}.issubset(cols):
             inputEncodings += 1
+        if {"SubreadSet"}.issubset(cols):
+            inputEncodings += 1
+        if {"AlignmentSet"}.issubset(cols):
+            inputEncodings += 1
         if inputEncodings == 0:
             raise TableValidationError("Input data not encoded in condition table")
         if inputEncodings > 1:
@@ -105,6 +109,11 @@ class ConditionTable(object):
             return resolver.resolveAlignmentSet(rowRecord.SMRTLinkServer, rowRecord.JobId)
         elif {"JobPath"}.issubset(cols):
             return resolver.findAlignmentSet(rowRecord.JobPath)
+        elif {"SubreadSet"}.issubset(cols):
+            return resolver.ensureSubreadSet(rowRecord.SubreadSet)
+        elif {"AlignmentSet"}.issubset(cols):
+            return resolver.ensureAlignmentSet(rowRecord.AlignmentSet)
+
 
     def _resolveInputs(self, resolver):
         self._inputsByCondition = {}
@@ -151,10 +160,12 @@ class ConditionTable(object):
     def inputType(self):
         cols = self.tbl.column_names
         if {"ReportsPath"}.issubset(cols) or \
-           {"RunCode", "ReportsFolder"}.issubset(cols):
+           {"RunCode", "ReportsFolder"}.issubset(cols) or \
+           {"SubreadSet"}.issubset(cols):
             return InputType.SubreadSet
         if {"SMRTLinkServer", "JobId"}.issubset(cols) or \
-           {"JobPath"}.issubset(cols):
+           {"JobPath"}.issubset(cols) or \
+           {"AlignmentSet"}.issubset(cols):
             return InputType.AlignmentSet
         raise NotImplementedError, "Input type not recognized/supported"
 

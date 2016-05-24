@@ -51,11 +51,13 @@
     Secondary analysis results can be specified as input data using the
     columns
       - =SMRTLinkServer= and =JobId=, /xor/
-      - =JobPath=
+      - =JobPath=, /xor/
+      - =AlignmentSet=
 
     Primary analysis input data can be encoded using columns
       - =RunCode= and =ReportsFolder= (subdirectory of run directory), /xor/
-      - =ReportsPath=
+      - =ReportsPath=, /xor/
+      - =SubreadSet=
 
     Legacy primary analysis data is (=bax.h5= files) is *not* supported.
 
