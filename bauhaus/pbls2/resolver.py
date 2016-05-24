@@ -93,6 +93,18 @@ class Resolver(object):
             raise DataNotFound("Multiple SubreadSets present: %s" % reportsPath)
         return subreadsFnames[0]
 
+    def findAlignmentSet(self, jobDir):
+        """
+        Given the secondary job path (SMRTlink), find the alignment set within
+        """
+        candidates = glob(op.join(jobDir, "tasks/*/final*alignmentset.xml"))
+        if len(candidates) < 1:
+            raise DataNotFound("AlignmentSet not found in job directory %s " % jobDir)
+        elif len(candidates) > 1:
+            raise DataNotFound("Multiple AlignmentSets present in job directory %s" % jobDir)
+        else:
+            return candidates[0]
+
     def resolveSubreadSet(self, runCode, reportsFolder=""):
         reportsPath = self.resolvePrimaryPath(runCode, reportsFolder)
         return self.findSubreadSet(self, reportsPath)
@@ -132,10 +144,4 @@ class Resolver(object):
 
     def resolveAlignmentSet(self, smrtLinkServer, jobId):
         jobDir = self.resolveJob(smrtLinkServer, jobId)
-        candidates = glob(op.join(jobDir, "tasks/*/final*alignmentset.xml"))
-        if len(candidates) < 1:
-            raise DataNotFound("AlignmentSet not found for job: %s:%d" % (smrtLinkServer, jobId))
-        elif len(candidates) > 1:
-            raise DataNotFound("Multiple AlignmentSets present for job: %s:%d" % (smrtLinkServer, jobId))
-        else:
-            return candidates[0]
+        return self.findAlignmentSet(jobDir)

@@ -104,7 +104,7 @@ class ConditionTable(object):
         elif {"SMRTLinkServer", "JobId"}.issubset(cols):
             return resolver.resolveAlignmentSet(rowRecord.SMRTLinkServer, rowRecord.JobId)
         elif {"JobPath"}.issubset(cols):
-            raise NotImplementedError
+            return resolver.findAlignmentSet(rowRecord.JobPath)
 
     def _resolveInputs(self, resolver):
         self._inputsByCondition = {}
