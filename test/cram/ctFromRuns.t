@@ -36,7 +36,8 @@ as a small diff.
     command = $gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out
   
   rule splitByZmw
-    command = $grid dataset split --zmws --chunks 8 --outdir $outdir $in
+    command = $grid dataset split --zmws --targetSize 1 --chunks 8 --outdir $
+        $outdir $in
   
   rule mergeDatasetsForMovie
     command = $grid dataset merge $out $in
