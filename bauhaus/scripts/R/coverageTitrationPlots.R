@@ -55,8 +55,8 @@ makeCoverageTitrationTable1 <- function(maskedVariantsDir)
     {
         lines <- readLines(alignmentSummaryFile)
         sequenceRegionLines <- lines[grep("##sequence-region", lines)]
-        tbl <- str_split_fixed(sequenceRegionLines, " ", 4)
-        chromosomeSizes <- as.numeric(tbl[,4])
+        cols <- str_split(sequenceRegionLines, " ")
+        chromosomeSizes <- as.integer(lapply(cols, tail, 1))
         sum(chromosomeSizes)
     }
 
