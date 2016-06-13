@@ -1,3 +1,5 @@
 *.pyc
 *~
 bauhaus.egg-info
+build
+dist
