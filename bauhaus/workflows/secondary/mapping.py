@@ -3,8 +3,10 @@ __all__ = [ "BasicMappingWorkflow", "ChunkedMappingWorkflow"]
 import os.path as op
 
 from bauhaus import Workflow
-from .datasetOps import *
 from bauhaus.experiment import (InputType, ResequencingConditionTable)
+from .datasetOps import *
+from .subreads import genSubreads, genSubreadSetSplit
+
 
 # Conventions (in the absence of types!):
 #
@@ -106,7 +108,7 @@ class BasicMappingWorkflow(Workflow):
             with pflow.context("condition", condition):
                 reference = ct.reference(condition)
                 if ct.inputType == InputType.SubreadSet:
-                    subreadSets = ct.inputs(condition)
+                    subreadSets = genSubreads(pflow, ct.inputs(condition))
                     outputDict[condition] = genMapping(pflow, subreadSets, reference)
                 elif ct.inputType == InputType.AlignmentSet:
                     outputDict[condition] = genAlignmentSetMergeForCondition(pflow, ct.inputs(condition))
@@ -133,7 +135,7 @@ class ChunkedMappingWorkflow(Workflow):
             with pflow.context("condition", condition):
                 reference = ct.reference(condition)
                 if ct.inputType == InputType.SubreadSet:
-                    subreadSets = ct.inputs(condition)
+                    subreadSets = genSubreads(pflow, ct.inputs(condition))
                     outputDict[condition] = genChunkedMapping(pflow, subreadSets, reference, splitFactor=8)
                 elif ct.inputType == InputType.AlignmentSet:
                     outputDict[condition] = genDatasetMergeForCondition(pflow, ct.inputs(condition), "mapping", "alignmentset")

@@ -39,21 +39,6 @@ def entityName(filename):
 #     outputs from its final build statement
 #
 
-def genSubreadSetSplit(pflow, subreadSet, splitFactor):
-    # Split by ZMWs.  Returns: [dset]
-    assert splitFactor >= 1
-    pflow.genRuleOnce(
-            "splitByZmw",
-            "$grid dataset split --zmws --targetSize 1 --chunks %d --outdir $outdir $in" % (splitFactor,))
-    movie = movieName(subreadSet)
-    splitOutputs =  [ "{condition}/subreads_chunks/%s.chunk%d.subreadset.xml" % (movie, i)
-                      for i in xrange(splitFactor) ]
-    buildStmt = pflow.genBuildStatement(splitOutputs,
-                                        "splitByZmw",
-                                        [subreadSet],
-                                        variables={"outdir": "{condition}/subreads_chunks"})
-    return buildStmt.outputs
-
 
 # ---------
 

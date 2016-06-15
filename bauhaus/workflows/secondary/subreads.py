@@ -1,12 +1,10 @@
-__all__ = [ "BasicSubreadsWorkflow" ]
+__all__ = [ "genSubreads", "genSubreadSetSplit" ]
 
 import os.path as op
 
 from bauhaus import Workflow
 from .datasetOps import *
 from bauhaus.experiment import (InputType, ConditionTable)
-
-# These will be run within a condition...
 
 def genSubreads(pflow, remoteSubreadSets):
     """
@@ -26,29 +24,18 @@ def genSubreads(pflow, remoteSubreadSets):
         localSubreadSets.extend(subreadCopyStmt.outputs)
     return localSubreadSets
 
-# ----
 
-class BasicSubreadsWorkflow(Workflow):
-    """
-    Generate subreads datasets under a directory within the worfkflow,
-    fixing relative paths
-    """
-    @staticmethod
-    def name():
-        return "BasicSubreads"
-
-    @staticmethod
-    def conditionTableType():
-        return ConditionTable
-
-    def generate(self, pflow, ct):
-        outputDict = {}
-        for condition in ct.conditions:
-            with pflow.context("condition", condition):
-                if ct.inputType == InputType.SubreadSet:
-                    remoteSubreadSets = ct.inputs(condition)
-                    localSubreadSets = genSubreads(pflow, remoteSubreadSets)
-                    outputDict[condition] = localSubreadSets
-                else:
-                    raise NotImplementedError, "Support not yet implemented for this input type"
-        return outputDict
+def genSubreadSetSplit(pflow, subreadSet, splitFactor):
+    # Split by ZMWs.  Returns: [dset]
+    assert splitFactor >= 1
+    pflow.genRuleOnce(
+            "splitByZmw",
+            "$grid dataset split --zmws --targetSize 1 --chunks %d --outdir $outdir $in" % (splitFactor,))
+    movie = movieName(subreadSet)
+    splitOutputs =  [ "{condition}/subreads_chunks/%s.chunk%d.subreadset.xml" % (movie, i)
+                      for i in xrange(splitFactor) ]
+    buildStmt = pflow.genBuildStatement(splitOutputs,
+                                        "splitByZmw",
+                                        [subreadSet],
+                                        variables={"outdir": "{condition}/subreads_chunks"})
+    return buildStmt.outputs

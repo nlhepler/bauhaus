@@ -11,6 +11,7 @@ from bauhaus.utils import listConcat
 
 from .datasetOps import *
 from .mapping import genMappingCCS
+from .subreads import genSubreads, genSubreadSetSplit
 
 def genCCS(pflow, subreadSets):
     ccsRule = pflow.genRuleOnce(
@@ -88,7 +89,8 @@ class BasicCCSWorkflow(Workflow):
         for condition in ct.conditions:
             with pflow.context("condition", condition):
                 assert ct.inputType == InputType.SubreadSet # TODO: move to validation.
-                outputDict[condition] = genCCS(pflow, ct.inputs(condition))
+                subreadSets = genSubreads(pflow, ct.inputs(condition))
+                outputDict[condition] = genCCS(pflow, subreadSets)
         return outputDict
 
 
@@ -109,7 +111,8 @@ class ChunkedCCSWorkflow(Workflow):
         for condition in ct.conditions:
             with pflow.context("condition", condition):
                 assert ct.inputType == InputType.SubreadSet # TODO: move to validation.
-                outputDict[condition] = genChunkedCCS(pflow, ct.inputs(condition))
+                subreadSets = genSubreads(pflow, ct.inputs(condition))
+                outputDict[condition] = genChunkedCCS(pflow, subreadSets)
         return outputDict
 
 
@@ -131,7 +134,8 @@ class CCSMappingWorkflow(Workflow):
         for condition in ct.conditions:
             with pflow.context("condition", condition):
                 assert ct.inputType == InputType.SubreadSet # TODO: move to validation.
-                outputDict[condition] = genCCSAndMapping(pflow, ct.inputs(condition), ct.reference(condition))
+                subreadSets = genSubreads(pflow, ct.inputs(condition))
+                outputDict[condition] = genCCSAndMapping(pflow, subreadSets, ct.reference(condition))
         return outputDict
 
 

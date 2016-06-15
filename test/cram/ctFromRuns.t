@@ -32,6 +32,9 @@ as a small diff.
   gridSMP = $grid -pe smp
   
   # Rules
+  rule copySubreadsDataset
+    command = dataset create $out $in
+  
   rule map
     command = $gridSMP $ncpus pbalign --nproc $ncpus $in $reference $out
   
@@ -66,6 +69,14 @@ as a small diff.
   
   
   # Build targets
+  build Ecoli/subreads/m54011_160305_235923.subreadset.xml: $
+      copySubreadsDataset $
+      /pbi/collections/315/3150122/r54011_20160305_235615/1_A01/m54011_160305_235923.subreadset.xml
+  
+  build Ecoli/subreads/m54011_160306_050740.subreadset.xml: $
+      copySubreadsDataset $
+      /pbi/collections/315/3150122/r54011_20160305_235615/2_B01/m54011_160306_050740.subreadset.xml
+  
   build Ecoli/subreads_chunks/m54011_160305_235923.chunk0.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160305_235923.chunk1.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160305_235923.chunk2.subreadset.xml $
@@ -74,8 +85,7 @@ as a small diff.
       Ecoli/subreads_chunks/m54011_160305_235923.chunk5.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160305_235923.chunk6.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160305_235923.chunk7.subreadset.xml: $
-      splitByZmw $
-      /pbi/collections/315/3150122/r54011_20160305_235615/1_A01/m54011_160305_235923.subreadset.xml
+      splitByZmw Ecoli/subreads/m54011_160305_235923.subreadset.xml
     outdir = Ecoli/subreads_chunks
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk0.alignmentset.xml: $
@@ -150,8 +160,7 @@ as a small diff.
       Ecoli/subreads_chunks/m54011_160306_050740.chunk5.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160306_050740.chunk6.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160306_050740.chunk7.subreadset.xml: $
-      splitByZmw $
-      /pbi/collections/315/3150122/r54011_20160305_235615/2_B01/m54011_160306_050740.subreadset.xml
+      splitByZmw Ecoli/subreads/m54011_160306_050740.subreadset.xml
     outdir = Ecoli/subreads_chunks
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk0.alignmentset.xml: $
@@ -222,6 +231,14 @@ as a small diff.
       Ecoli/mapping/m54011_160305_235923.alignmentset.xml $
       Ecoli/mapping/m54011_160306_050740.alignmentset.xml
   
+  build Lambda/subreads/m54008_160308_002050.subreadset.xml: $
+      copySubreadsDataset $
+      /pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml
+  
+  build Lambda/subreads/m54008_160308_053311.subreadset.xml: $
+      copySubreadsDataset $
+      /pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml
+  
   build Lambda/subreads_chunks/m54008_160308_002050.chunk0.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_002050.chunk1.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_002050.chunk2.subreadset.xml $
@@ -230,8 +247,7 @@ as a small diff.
       Lambda/subreads_chunks/m54008_160308_002050.chunk5.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_002050.chunk6.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_002050.chunk7.subreadset.xml: $
-      splitByZmw $
-      /pbi/collections/315/3150128/r54008_20160308_001811/1_A01/m54008_160308_002050.subreadset.xml
+      splitByZmw Lambda/subreads/m54008_160308_002050.subreadset.xml
     outdir = Lambda/subreads_chunks
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml: $
@@ -306,8 +322,7 @@ as a small diff.
       Lambda/subreads_chunks/m54008_160308_053311.chunk5.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_053311.chunk6.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_053311.chunk7.subreadset.xml: $
-      splitByZmw $
-      /pbi/collections/315/3150128/r54008_20160308_001811/2_B01/m54008_160308_053311.subreadset.xml
+      splitByZmw Lambda/subreads/m54008_160308_053311.subreadset.xml
     outdir = Lambda/subreads_chunks
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml: $
