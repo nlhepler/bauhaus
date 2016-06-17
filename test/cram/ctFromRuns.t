@@ -1,9 +1,9 @@
 
 Run a bigger workflow--coverage titration with reports.
 
-  $ TABLE=$TESTDIR/../data/lambdaAndEcoli.csv
+  $ BH_ROOT=$TESTDIR/../../
 
-  $ bauhaus -o ctFromRuns -m -t $TABLE -w CoverageTitrationReports generate
+  $ bauhaus -o ctFromRuns -m -t ${BH_ROOT}test/data/lambdaAndEcoli.csv -w CoverageTitrationReports generate
   Validation and input resolution succeeded.
   Runnable workflow written to directory "ctFromRuns"
 

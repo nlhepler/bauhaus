@@ -1,9 +1,9 @@
 
 Do variant calling from pre-existing mapping jobs.
 
-  $ TABLE=$TESTDIR/../data/lambdaAndEcoliJobs.csv
+  $ BH_ROOT=$TESTDIR/../../
 
-  $ bauhaus -o vc -m -t $TABLE -w VariantCalling generate
+  $ bauhaus -o vc -m -t ${BH_ROOT}test/data/lambdaAndEcoliJobs.csv -w VariantCalling generate
   Validation and input resolution succeeded.
   Runnable workflow written to directory "vc"
 

@@ -1,9 +1,9 @@
 
 Let's try a very simple mapping job (no chunking)
 
-  $ TABLE=$TESTDIR/../data/lambdaAndEcoli.csv
+  $ BH_ROOT=$TESTDIR/../../
 
-  $ bauhaus -o map -m -t $TABLE -w BasicMapping generate
+  $ bauhaus -o map -m -t ${BH_ROOT}test/data/lambdaAndEcoli.csv -w BasicMapping generate
   Validation and input resolution succeeded.
   Runnable workflow written to directory "map"
 
