@@ -2,6 +2,7 @@ __all__ = [ "InputType",
             "ConditionTable",
             "ResequencingConditionTable",
             "CoverageTitrationConditionTable",
+            "UnrolledMappingConditionTable",
             "TableValidationError",
             "InputResolutionError" ]
 
@@ -236,3 +237,19 @@ class CoverageTitrationConditionTable(ResequencingConditionTable):
         for condition in self.conditions:
             genome = self.genome(condition)
             self._referenceMaskByCondition[condition] = resolver.resolveReferenceMask(genome)
+
+
+class UnrolledMappingConditionTable(ResequencingConditionTable):
+    """
+    Unrolled mapping requires an unrolled reference.  Ideally we would
+    like some kind of flag in the reference information to indicate
+    whether this holds or not.  For now, just look for "circular" or
+    "unrolled" in the reference name.
+    """
+    def _validateTable(self):
+        super(UnrolledMappingConditionTable, self)._validateTable()
+        for genome in self.tbl.Genome:
+            if "unrolled" in genome or "circular" in genome:
+                continue
+            else:
+                raise TableValidationError, "Unrolled mapping requires an unrolled reference"

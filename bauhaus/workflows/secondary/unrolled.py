@@ -1,5 +1,5 @@
 from bauhaus import Workflow
-from bauhaus.experiment import (InputType, ResequencingConditionTable)
+from bauhaus.experiment import (InputType, UnrolledMappingConditionTable)
 
 from .datasetOps import *
 
@@ -97,7 +97,7 @@ class UnrolledMappingWorkflow(Workflow):
 
     @staticmethod
     def conditionTableType():
-        return ResequencingConditionTable # TODO
+        return UnrolledMappingConditionTable
 
     def generate(self, pflow, ct):
         outputDict = {}
@@ -110,9 +110,6 @@ class UnrolledMappingWorkflow(Workflow):
                 else:
                     raise NotImplementedError, "Support not yet implemented for this input type"
         return outputDict
-
-
-
 
 class UnrolledNoHQMappingWorkfow(Workflow):
     @staticmethod
