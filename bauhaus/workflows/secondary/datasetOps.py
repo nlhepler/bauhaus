@@ -1,4 +1,5 @@
 import os.path as op
+from xml.etree import ElementTree
 
 def movieName(filename):
     """
@@ -28,6 +29,34 @@ def entityName(filename):
     fields = base.split(".")
     assert len(fields) in (3, 4) and fields[-1] == "xml"
     return ".".join(fields[:-2])
+
+def subreadsBam(subreadSet):
+    et = ElementTree.parse(subreadSet)
+    q = et.findall('.//{http://pacificbiosciences.com/PacBioBaseDataModel.xsd}ExternalResource[@MetaType="PacBio.SubreadFile.SubreadBamFile"]')
+    assert len(q) == 1
+    subreadsBamFileName=q[0].attrib["ResourceId"]
+    return subreadsBamFileName
+
+def scrapsBam(subreadSet):
+    et = ElementTree.parse(subreadSet)
+    q = et.findall('.//{http://pacificbiosciences.com/PacBioBaseDataModel.xsd}ExternalResource[@MetaType="PacBio.SubreadFile.ScrapsBamFile"]')
+    assert len(q) == 1
+    subreadsBamFileName=q[0].attrib["ResourceId"]
+    return subreadsBamFileName
+
+def reportsDirectory(subreadSet):
+    subreadsBamFileName = subreadsBam(subreadSet)
+    assert op.isabs(subreadsBamFileName)
+    return op.dirname(subreadsBamFileName)
+
+def adaptersFasta(subreadSet):
+    """
+    Presently we poke around in the run dir to find the `adapters.fasta`.
+    In the future, this will be indicated as an external resource in the dataset XML.
+    """
+    return op.join(reportsDirectory(subreadSet), movieName(subreadSet) + ".adapters.fasta")
+
+
 
 
 # ------- Split/merge -------------
@@ -75,6 +104,8 @@ def genDatasetConsolidateForMovie(pflow, datasets, taskTypeName, datasetTypeName
     # operations.
     if datasetTypeName == "alignmentset":
         bamTypeName = "aligned_subreads"
+    elif datasetTypeName == "unrolledalignmentset":
+        bamTypeName = "aligned_unrolledreads"
     elif datasetTypeName == "consensusreadset":
         bamTypeName = "ccs"
     else:
