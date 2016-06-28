@@ -35,14 +35,18 @@ def subreadsBam(subreadSet):
     q = et.findall('.//{http://pacificbiosciences.com/PacBioBaseDataModel.xsd}ExternalResource[@MetaType="PacBio.SubreadFile.SubreadBamFile"]')
     assert len(q) == 1
     subreadsBamFileName=q[0].attrib["ResourceId"]
+    if not op.isabs(subreadsBamFileName):
+        subreadsBamFileName = op.join(op.dirname(subreadSet), subreadsBamFileName)
     return subreadsBamFileName
 
 def scrapsBam(subreadSet):
     et = ElementTree.parse(subreadSet)
     q = et.findall('.//{http://pacificbiosciences.com/PacBioBaseDataModel.xsd}ExternalResource[@MetaType="PacBio.SubreadFile.ScrapsBamFile"]')
     assert len(q) == 1
-    subreadsBamFileName=q[0].attrib["ResourceId"]
-    return subreadsBamFileName
+    scrapsBamFileName=q[0].attrib["ResourceId"]
+    if not op.isabs(scrapsBamFileName):
+        scrapsBamFileName = op.join(op.dirname(subreadSet), scrapsBamFileName)
+    return scrapsBamFileName
 
 def reportsDirectory(subreadSet):
     subreadsBamFileName = subreadsBam(subreadSet)
