@@ -38,8 +38,8 @@ class Resolver(object):
 
     # TODO: this isn't really hygienic because, in fact, there are
     # multiple reference repos, associated with different SL engines
-    REFERENCE_MASKS_ROOT = "/mnt/secondary/Share/VariantCalling/Quiver/GenomeMasks"
-    REFERENCES_ROOT = "/mnt/secondary/iSmrtanalysis/current/common/references"
+    REFERENCE_MASKS_ROOT = "/pbi/secondary/Share/VariantCalling/Quiver/GenomeMasks"
+    REFERENCES_ROOT = "/pbi/secondary/iSmrtanalysis/current/common/references"
 
     SMRTLINK_SERVER_TO_JOBS_ROOT = \
         { serverName : ("/pbi/dept/secondary/siv/smrtlink/smrtlink-" + smrtLinkId + "/smrtsuite/userdata/jobs_root")
