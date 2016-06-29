@@ -22,7 +22,7 @@ def genUnrolledReads(pflow, subreadSets):
     #
     bam2bamUnrollRule = pflow.genRuleOnce(
         "unrollReads",
-        "$grid bam2bam --hqregion $subreadsIn $scrapsIn -o $outPrefix &&" +
+        "$gridSMP $ncpus bam2bam -j $ncpus --hqregion $subreadsIn $scrapsIn -o $outPrefix &&" +
         "dataset create --type SubreadSet $out $outBam")
 
     unrolledReadSets = []
