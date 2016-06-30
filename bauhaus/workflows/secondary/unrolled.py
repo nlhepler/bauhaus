@@ -10,6 +10,10 @@ __all__ = ["UnrolledMappingWorkflow", "UnrolledNoHQMappingWorkfow"]
 # TODO: need unrolled references for asym and sym adapter types... sigh
 
 def genUnrolledReads(pflow, subreadSets):
+    """
+    Use bam2bam to stitch the "unrolled" reads from the bam, giving
+    the unrolled HQ regions as records
+    """
     # While these are not really "subreads", we create a subreadset
     # for them.  There is no model in our official ontology for
     # "unrolled reads" datasets.
