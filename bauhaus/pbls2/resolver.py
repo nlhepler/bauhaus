@@ -107,7 +107,7 @@ class Resolver(object):
 
     def resolveSubreadSet(self, runCode, reportsFolder=""):
         reportsPath = self.resolvePrimaryPath(runCode, reportsFolder)
-        return self.findSubreadSet(self, reportsPath)
+        return self.findSubreadSet(reportsPath)
 
     def resolveReference(self, referenceName):
         referenceFasta = op.join(self.REFERENCES_ROOT, referenceName, "sequence", referenceName + ".fasta")
