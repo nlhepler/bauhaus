@@ -23,7 +23,7 @@ def genCCS(pflow, subreadSets):
         with pflow.context("movieName", movieName(subreadSet)):
             outBam = pflow.formatInContext("{condition}/ccs/{movieName}.ccs.bam")
             ccsDiagnostics= pflow.formatInContext("{condition}/{movieName}.ccs-report.txt")
-            buildVariables = dict(outBam=outBam, ncpus=8, ccsDiagnostics=ccsDiagnostics)
+            buildVariables = dict(outBam=outBam, ccsDiagnostics=ccsDiagnostics)
             ccsSets.extend(pflow.genBuildStatement(
                 ["{condition}/ccs/{movieName}.consensusreadset.xml"],
                 "ccs",
@@ -45,7 +45,7 @@ def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
                 with pflow.context("chunkNum", i):
                     outBam = pflow.formatInContext("{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.ccs.bam")
                     ccsDiagnostics = pflow.formatInContext("{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.ccs-report.txt")
-                    buildVariables = dict(outBam=outBam, ncpus=8, ccsDiagnostics=ccsDiagnostics)
+                    buildVariables = dict(outBam=outBam, ccsDiagnostics=ccsDiagnostics)
                     buildStmt = pflow.genBuildStatement(
                         ["{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.consensusreadset.xml"],
                         "ccs",

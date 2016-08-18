@@ -54,13 +54,11 @@ Let's try a very simple mapping job (no chunking)
   
   build Ecoli/mapping/m54011_160305_235923.alignmentset.xml: map $
       Ecoli/subreads/m54011_160305_235923.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping/m54011_160306_050740.alignmentset.xml: map $
       Ecoli/subreads/m54011_160306_050740.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
@@ -78,13 +76,11 @@ Let's try a very simple mapping job (no chunking)
   
   build Lambda/mapping/m54008_160308_002050.alignmentset.xml: map $
       Lambda/subreads/m54008_160308_002050.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping/m54008_160308_053311.alignmentset.xml: map $
       Lambda/subreads/m54008_160308_053311.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
