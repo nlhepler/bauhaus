@@ -8,7 +8,7 @@ from .mapping import ChunkedMappingWorkflow
 
 # -- Basic variant calling...
 
-def genVariantCalling(pflow, alignedSubreadsSet, reference,
+def genVariantCalling(pflow, alignedSubreadsSet, modelPath, modelSpec, reference,
                       referenceMask=None, algorithm="arrow", coverageLimit=None):
     """
     Run the variant calling algorithm with all variants filtering
@@ -35,7 +35,7 @@ def genVariantCalling(pflow, alignedSubreadsSet, reference,
 
     vcRule = pflow.genRuleOnce(
         "variantCalling",
-        "$gridSMP $ncpus variantCaller --algorithm=%s $coverageLimitArgument -x0 -q0 -j $ncpus $in -r $reference -o $out -o $consensusFasta -o $consensusFastq"
+        "$gridSMP $ncpus variantCaller $modelPath $modelSpec --algorithm=%s $coverageLimitArgument -x0 -q0 -j $ncpus $in -r $reference -o $out -o $consensusFasta -o $consensusFastq"
         % (algorithm))
 
     bs = pflow.genBuildStatement(
@@ -43,6 +43,8 @@ def genVariantCalling(pflow, alignedSubreadsSet, reference,
         "variantCalling",
         [alignedSubreadsSet],
         dict(reference=reference,
+             modelPath="-P{0}".format(modelPath) if modelPath else "",
+             modelSpec="-p{0}".format(modelSpec) if modelSpec else "",
              consensusFasta=CONSENSUS_FASTA,
              consensusFastq=CONSENSUS_FASTQ,
              coverageLimitArgument=coverageLimitArgument))
@@ -87,7 +89,10 @@ class VariantCallingWorkflow(Workflow):
         outputDict = {}
         for (condition, alignmentSets) in mapping.iteritems():
             alignmentSet = alignmentSets[0]
+            modelPath = ct.modelPath(condition)
+            modelSpec = ct.modelSpec(condition)
             reference = ct.reference(condition)
             with pflow.context("condition", condition):
-                outputDict[condition] = genVariantCalling(pflow, alignmentSet, reference, algorithm="arrow")
+                outputDict[condition] = genVariantCalling(pflow, alignmentSet, modelPath, modelSpec, reference,
+                                                          algorithm="arrow")
         return outputDict
