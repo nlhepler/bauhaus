@@ -30,6 +30,8 @@ class CoverageTitrationWorkflow(Workflow):
         outputDict = defaultdict(list)
         for (condition, alignmentSets) in mapping.iteritems():
             alignmentSet = alignmentSets[0]
+            modelPath = ct.modelPath(condition)
+            modelSpec = ct.modelSpec(condition)
             reference = ct.reference(condition)
             referenceMask = ct.referenceMask(condition)
             with pflow.context("condition", condition):
@@ -39,7 +41,7 @@ class CoverageTitrationWorkflow(Workflow):
                 with pflow.context("consensusAlgorithm", algorithm):
                     for x in COVERAGE_LEVELS:
                         outputDict[condition].extend(
-                            genVariantCalling(pflow, alignmentSet, reference,
+                            genVariantCalling(pflow, alignmentSet, modelPath, modelSpec, reference,
                                               referenceMask=referenceMask,
                                               algorithm=algorithm,
                                               coverageLimit=x))

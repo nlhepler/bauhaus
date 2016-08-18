@@ -173,6 +173,26 @@ class ConditionTable(object):
     def inputs(self, condition):
         return self._inputsByCondition[condition]
 
+    def modelPath(self, condition):
+        """
+        Use the condition table to locate model parameters files or folders
+        """
+        if not hasattr(self.condition(condition), 'ModelPath'):
+            return None
+        paths = _unique(self.condition(condition).ModelPath)
+        assert len(paths) == 1
+        return paths[0]
+
+    def modelSpec(self, condition):
+        """
+        Use the condition table to locate model override specification
+        """
+        if not hasattr(self.condition(condition), "ModelSpec"):
+            return None
+        specs = _unique(self.condition(condition).ModelSpec)
+        assert len(specs) == 1
+        return specs[0]
+
 class ResequencingConditionTable(ConditionTable):
     """
     Base class for representing Milhouse-style condition tables for
@@ -215,7 +235,6 @@ class ResequencingConditionTable(ConditionTable):
 
     def reference(self, condition):
         return self._referenceByCondition[condition]
-
 
 class CoverageTitrationConditionTable(ResequencingConditionTable):
 

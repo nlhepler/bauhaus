@@ -27,7 +27,7 @@ as a small diff.
 
   $ cat ctFromRuns/build.ninja
   # Variables
-  ncpus = 8
+  ncpus = 16
   grid = qsub -sync y -cwd -V -b y -e log -o log
   gridSMP = $grid -pe smp
   
@@ -51,9 +51,9 @@ as a small diff.
         --region_size=10000 $in $reference $out
   
   rule variantCalling
-    command = $gridSMP $ncpus variantCaller --algorithm=arrow $
-        $coverageLimitArgument -x0 -q0 -j $ncpus $in -r $reference -o $out -o $
-        $consensusFasta -o $consensusFastq
+    command = $gridSMP $ncpus variantCaller $modelPath $modelSpec $
+        --algorithm=arrow $coverageLimitArgument -x0 -q0 -j $ncpus $in -r $
+        $reference -o $out -o $consensusFasta -o $consensusFastq
   
   rule maskVariantsGff
     command = gffsubtract.pl $in $referenceMask > $out
@@ -326,11 +326,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-5.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-5.fastq
-    coverageLimitArgument = -X5
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-5.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-5.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-5.fastq
+    coverageLimitArgument = -X5
   
   build Ecoli/variant_calling/arrow/masked-variants-5.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-5.gff
@@ -339,11 +341,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-10.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-10.fastq
-    coverageLimitArgument = -X10
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-10.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-10.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-10.fastq
+    coverageLimitArgument = -X10
   
   build Ecoli/variant_calling/arrow/masked-variants-10.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-10.gff
@@ -352,11 +356,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-15.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-15.fastq
-    coverageLimitArgument = -X15
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-15.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-15.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-15.fastq
+    coverageLimitArgument = -X15
   
   build Ecoli/variant_calling/arrow/masked-variants-15.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-15.gff
@@ -365,11 +371,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-20.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-20.fastq
-    coverageLimitArgument = -X20
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-20.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-20.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-20.fastq
+    coverageLimitArgument = -X20
   
   build Ecoli/variant_calling/arrow/masked-variants-20.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-20.gff
@@ -378,11 +386,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-30.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-30.fastq
-    coverageLimitArgument = -X30
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-30.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-30.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-30.fastq
+    coverageLimitArgument = -X30
   
   build Ecoli/variant_calling/arrow/masked-variants-30.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-30.gff
@@ -391,11 +401,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-40.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-40.fastq
-    coverageLimitArgument = -X40
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-40.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-40.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-40.fastq
+    coverageLimitArgument = -X40
   
   build Ecoli/variant_calling/arrow/masked-variants-40.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-40.gff
@@ -404,11 +416,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-50.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-50.fastq
-    coverageLimitArgument = -X50
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-50.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-50.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-50.fastq
+    coverageLimitArgument = -X50
   
   build Ecoli/variant_calling/arrow/masked-variants-50.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-50.gff
@@ -417,11 +431,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-60.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-60.fastq
-    coverageLimitArgument = -X60
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-60.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-60.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-60.fastq
+    coverageLimitArgument = -X60
   
   build Ecoli/variant_calling/arrow/masked-variants-60.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-60.gff
@@ -430,11 +446,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-80.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-80.fastq
-    coverageLimitArgument = -X80
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-80.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-80.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-80.fastq
+    coverageLimitArgument = -X80
   
   build Ecoli/variant_calling/arrow/masked-variants-80.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-80.gff
@@ -443,11 +461,13 @@ as a small diff.
   
   build Ecoli/variant_calling/arrow/variants-100.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus-100.fastq
-    coverageLimitArgument = -X100
-    consensusFasta = Ecoli/variant_calling/arrow/consensus-100.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus-100.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus-100.fastq
+    coverageLimitArgument = -X100
   
   build Ecoli/variant_calling/arrow/masked-variants-100.gff: maskVariantsGff $
       Ecoli/variant_calling/arrow/variants-100.gff
@@ -461,11 +481,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-5.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-5.fastq
-    coverageLimitArgument = -X5
-    consensusFasta = Lambda/variant_calling/arrow/consensus-5.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-5.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-5.fastq
+    coverageLimitArgument = -X5
   
   build Lambda/variant_calling/arrow/masked-variants-5.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-5.gff
@@ -474,11 +496,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-10.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-10.fastq
-    coverageLimitArgument = -X10
-    consensusFasta = Lambda/variant_calling/arrow/consensus-10.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-10.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-10.fastq
+    coverageLimitArgument = -X10
   
   build Lambda/variant_calling/arrow/masked-variants-10.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-10.gff
@@ -487,11 +511,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-15.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-15.fastq
-    coverageLimitArgument = -X15
-    consensusFasta = Lambda/variant_calling/arrow/consensus-15.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-15.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-15.fastq
+    coverageLimitArgument = -X15
   
   build Lambda/variant_calling/arrow/masked-variants-15.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-15.gff
@@ -500,11 +526,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-20.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-20.fastq
-    coverageLimitArgument = -X20
-    consensusFasta = Lambda/variant_calling/arrow/consensus-20.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-20.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-20.fastq
+    coverageLimitArgument = -X20
   
   build Lambda/variant_calling/arrow/masked-variants-20.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-20.gff
@@ -513,11 +541,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-30.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-30.fastq
-    coverageLimitArgument = -X30
-    consensusFasta = Lambda/variant_calling/arrow/consensus-30.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-30.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-30.fastq
+    coverageLimitArgument = -X30
   
   build Lambda/variant_calling/arrow/masked-variants-30.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-30.gff
@@ -526,11 +556,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-40.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-40.fastq
-    coverageLimitArgument = -X40
-    consensusFasta = Lambda/variant_calling/arrow/consensus-40.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-40.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-40.fastq
+    coverageLimitArgument = -X40
   
   build Lambda/variant_calling/arrow/masked-variants-40.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-40.gff
@@ -539,11 +571,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-50.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-50.fastq
-    coverageLimitArgument = -X50
-    consensusFasta = Lambda/variant_calling/arrow/consensus-50.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-50.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-50.fastq
+    coverageLimitArgument = -X50
   
   build Lambda/variant_calling/arrow/masked-variants-50.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-50.gff
@@ -552,11 +586,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-60.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-60.fastq
-    coverageLimitArgument = -X60
-    consensusFasta = Lambda/variant_calling/arrow/consensus-60.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-60.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-60.fastq
+    coverageLimitArgument = -X60
   
   build Lambda/variant_calling/arrow/masked-variants-60.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-60.gff
@@ -565,11 +601,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-80.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-80.fastq
-    coverageLimitArgument = -X80
-    consensusFasta = Lambda/variant_calling/arrow/consensus-80.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-80.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-80.fastq
+    coverageLimitArgument = -X80
   
   build Lambda/variant_calling/arrow/masked-variants-80.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-80.gff
@@ -578,11 +616,13 @@ as a small diff.
   
   build Lambda/variant_calling/arrow/variants-100.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus-100.fastq
-    coverageLimitArgument = -X100
-    consensusFasta = Lambda/variant_calling/arrow/consensus-100.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus-100.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus-100.fastq
+    coverageLimitArgument = -X100
   
   build Lambda/variant_calling/arrow/masked-variants-100.gff: maskVariantsGff $
       Lambda/variant_calling/arrow/variants-100.gff
