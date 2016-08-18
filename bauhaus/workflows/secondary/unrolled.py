@@ -76,7 +76,7 @@ def genUnrolledMapping(pflow, unrolledReadSets, reference, splitFactor):
             unrolledReadSetChunks = genUnrolledReadSetSplit(pflow, unrolledReadSet, splitFactor)
             for (i, unrolledReadSetChunk) in enumerate(unrolledReadSetChunks):
                 with pflow.context("chunkNum", i):
-                    buildVariables = dict(reference=reference, ncpus=8)
+                    buildVariables = dict(reference=reference)
                     buildStmt = pflow.genBuildStatement(
                         ["{condition}/unrolled_mapping_chunks/{movieName}.chunk{chunkNum}.unrolledalignmentset.xml"],
                         "map_unrolled",
