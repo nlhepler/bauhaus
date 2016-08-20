@@ -31,7 +31,7 @@ def genMapping(pflow, subreadSets, reference):
     alignmentSets = []
     for subreadSet in subreadSets:
         with pflow.context("entityName", entityName(subreadSet)):
-            buildVariables = dict(reference=reference, ncpus=8)
+            buildVariables = dict(reference=reference)
             alignmentSets.extend(pflow.genBuildStatement(
                 ["{condition}/mapping/{entityName}.alignmentset.xml"],
                 "map",
@@ -51,7 +51,7 @@ def genMappingCCS(pflow, ccsSets, reference):
     alignmentSets = []
     for ccsSet in ccsSets:
         with pflow.context("entityName", entityName(ccsSet)):
-            buildVariables = dict(reference=reference, ncpus=8)
+            buildVariables = dict(reference=reference)
             alignmentSets.extend(pflow.genBuildStatement(
                 ["{condition}/ccs_mapping/{entityName}.consensusalignments.xml"],
                 "mapCCS",
@@ -74,7 +74,7 @@ def genChunkedMapping(pflow, subreadSets, reference, splitFactor=8):
             subreadSetChunks = genSubreadSetSplit(pflow, subreadSet, splitFactor)
             for (i, subreadSetChunk) in enumerate(subreadSetChunks):
                 with pflow.context("chunkNum", i):
-                    buildVariables = dict(reference=reference, ncpus=8)
+                    buildVariables = dict(reference=reference)
                     buildStmt = pflow.genBuildStatement(
                         ["{condition}/mapping_chunks/{movieName}.chunk{chunkNum}.alignmentset.xml"],
                         "map",
