@@ -42,12 +42,6 @@ as a small diff.
     command = $grid dataset split --zmws --targetSize 1 --chunks 8 --outdir $
         $outdir $in
   
-  rule mergeDatasetsForMovie
-    command = $grid dataset merge $out $in
-  
-  rule consolidateDatasetsForMovie
-    command = $grid dataset consolidate $in $outBam $out
-  
   rule mergeDatasetsForCondition
     command = $grid dataset merge $out $in
   
@@ -136,22 +130,6 @@ as a small diff.
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
-  build Ecoli/mapping/m54011_160305_235923_preconsolidate.alignmentset.xml: $
-      mergeDatasetsForMovie $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk0.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk1.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk2.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk3.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk4.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk5.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk6.alignmentset.xml $
-      Ecoli/mapping_chunks/m54011_160305_235923.chunk7.alignmentset.xml
-  
-  build Ecoli/mapping/m54011_160305_235923.alignmentset.xml: $
-      consolidateDatasetsForMovie $
-      Ecoli/mapping/m54011_160305_235923_preconsolidate.alignmentset.xml
-    outBam = Ecoli/mapping/m54011_160305_235923.aligned_subreads.bam
-  
   build Ecoli/subreads_chunks/m54011_160306_050740.chunk0.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160306_050740.chunk1.subreadset.xml $
       Ecoli/subreads_chunks/m54011_160306_050740.chunk2.subreadset.xml $
@@ -211,8 +189,15 @@ as a small diff.
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
-  build Ecoli/mapping/m54011_160306_050740_preconsolidate.alignmentset.xml: $
-      mergeDatasetsForMovie $
+  build Ecoli/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk0.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk1.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk2.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk3.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk4.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk5.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk6.alignmentset.xml $
+      Ecoli/mapping_chunks/m54011_160305_235923.chunk7.alignmentset.xml $
       Ecoli/mapping_chunks/m54011_160306_050740.chunk0.alignmentset.xml $
       Ecoli/mapping_chunks/m54011_160306_050740.chunk1.alignmentset.xml $
       Ecoli/mapping_chunks/m54011_160306_050740.chunk2.alignmentset.xml $
@@ -221,15 +206,6 @@ as a small diff.
       Ecoli/mapping_chunks/m54011_160306_050740.chunk5.alignmentset.xml $
       Ecoli/mapping_chunks/m54011_160306_050740.chunk6.alignmentset.xml $
       Ecoli/mapping_chunks/m54011_160306_050740.chunk7.alignmentset.xml
-  
-  build Ecoli/mapping/m54011_160306_050740.alignmentset.xml: $
-      consolidateDatasetsForMovie $
-      Ecoli/mapping/m54011_160306_050740_preconsolidate.alignmentset.xml
-    outBam = Ecoli/mapping/m54011_160306_050740.aligned_subreads.bam
-  
-  build Ecoli/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
-      Ecoli/mapping/m54011_160305_235923.alignmentset.xml $
-      Ecoli/mapping/m54011_160306_050740.alignmentset.xml
   
   build Lambda/subreads/m54008_160308_002050.subreadset.xml: $
       copySubreadsDataset $
@@ -298,22 +274,6 @@ as a small diff.
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
-  build Lambda/mapping/m54008_160308_002050_preconsolidate.alignmentset.xml: $
-      mergeDatasetsForMovie $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml $
-      Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml
-  
-  build Lambda/mapping/m54008_160308_002050.alignmentset.xml: $
-      consolidateDatasetsForMovie $
-      Lambda/mapping/m54008_160308_002050_preconsolidate.alignmentset.xml
-    outBam = Lambda/mapping/m54008_160308_002050.aligned_subreads.bam
-  
   build Lambda/subreads_chunks/m54008_160308_053311.chunk0.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_053311.chunk1.subreadset.xml $
       Lambda/subreads_chunks/m54008_160308_053311.chunk2.subreadset.xml $
@@ -373,8 +333,15 @@ as a small diff.
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
-  build Lambda/mapping/m54008_160308_053311_preconsolidate.alignmentset.xml: $
-      mergeDatasetsForMovie $
+  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml $
+      Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml $
       Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml $
       Lambda/mapping_chunks/m54008_160308_053311.chunk1.alignmentset.xml $
       Lambda/mapping_chunks/m54008_160308_053311.chunk2.alignmentset.xml $
@@ -383,15 +350,6 @@ as a small diff.
       Lambda/mapping_chunks/m54008_160308_053311.chunk5.alignmentset.xml $
       Lambda/mapping_chunks/m54008_160308_053311.chunk6.alignmentset.xml $
       Lambda/mapping_chunks/m54008_160308_053311.chunk7.alignmentset.xml
-  
-  build Lambda/mapping/m54008_160308_053311.alignmentset.xml: $
-      consolidateDatasetsForMovie $
-      Lambda/mapping/m54008_160308_053311_preconsolidate.alignmentset.xml
-    outBam = Lambda/mapping/m54008_160308_053311.aligned_subreads.bam
-  
-  build Lambda/mapping/all_movies.alignmentset.xml: mergeDatasetsForCondition $
-      Lambda/mapping/m54008_160308_002050.alignmentset.xml $
-      Lambda/mapping/m54008_160308_053311.alignmentset.xml
   
   build Ecoli/variant_calling/alignments_summary.gff: summarize_coverage $
       Ecoli/mapping/all_movies.alignmentset.xml
