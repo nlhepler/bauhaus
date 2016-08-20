@@ -59,7 +59,7 @@ def genMappingCCS(pflow, ccsSets, reference):
                 buildVariables).outputs)
     return genDatasetMergeForCondition(pflow, alignmentSets, "ccs_mapping", "consensusalignments")
 
-def genChunkedMapping(pflow, subreadSets, reference, splitFactor=8):
+def genChunkedMapping(pflow, subreadSets, reference, splitFactor=8, doMerge=False):
     """
     Break the subreads set into chunks, map the chunks, then
     consolidate the mapped chunks
@@ -81,8 +81,11 @@ def genChunkedMapping(pflow, subreadSets, reference, splitFactor=8):
                         [subreadSetChunk],
                         buildVariables)
                     alignmentSetChunks.extend(buildStmt.outputs)
-            alignmentSets.extend(
-                genDatasetConsolidateForMovie(pflow, alignmentSetChunks, "mapping", "alignmentset"))
+            if doMerge:
+                alignmentSets.extend(
+                    genDatasetConsolidateForMovie(pflow, alignmentSetChunks, "mapping", "alignmentset"))
+            else:
+                alignmentSets.extend(alignmentSetChunks)
     return genDatasetMergeForCondition(pflow, alignmentSets, "mapping", "alignmentset")
 
 # ---------- Workflows -------------
