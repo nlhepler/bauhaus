@@ -28,7 +28,7 @@ Let's try a very simple mapping job (no chunking)
 
   $ cat map/build.ninja
   # Variables
-  ncpus = 8
+  ncpus = 16
   grid = qsub -sync y -cwd -V -b y -e log -o log
   gridSMP = $grid -pe smp
   

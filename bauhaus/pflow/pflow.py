@@ -101,7 +101,7 @@ class PFlow(ContextTracker):
         f = open(outputNinjaFname, "w")
         with closing(ninja.Writer(f)) as w:
             w.comment("Variables")
-            w.variable("ncpus", "8")
+            w.variable("ncpus", "16")
             w.variable("grid", "qsub -sync y -cwd -V -b y -e log -o log")
             w.variable("gridSMP", "$grid -pe smp")
             w.newline()

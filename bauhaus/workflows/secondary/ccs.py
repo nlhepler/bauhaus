@@ -13,10 +13,15 @@ from .datasetOps import *
 from .mapping import genMappingCCS
 from .subreads import genSubreads, genSubreadSetSplit
 
-def genCCS(pflow, subreadSets):
+def formatModelParams(buildVariables, modelPath, modelSpec):
+    buildVariables["modelPath"] = "--modelPath={0}".format(modelPath) if modelPath else ""
+    buildVariables["modelSpec"] = "--modelSpec={0}".format(modelSpec) if modelSpec else ""
+    return buildVariables
+
+def genCCS(pflow, subreadSets, modelPath, modelSpec):
     ccsRule = pflow.genRuleOnce(
         "ccs",
-        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus --reportFile=$ccsDiagnostics $in $outBam && " +
+        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus --reportFile=$ccsDiagnostics $modelPath $modelSpec $in $outBam && " +
         "dataset create --type ConsensusReadSet $out $outBam")
     ccsSets = []
     for subreadSet in subreadSets:
@@ -24,6 +29,7 @@ def genCCS(pflow, subreadSets):
             outBam = pflow.formatInContext("{condition}/ccs/{movieName}.ccs.bam")
             ccsDiagnostics= pflow.formatInContext("{condition}/{movieName}.ccs-report.txt")
             buildVariables = dict(outBam=outBam, ccsDiagnostics=ccsDiagnostics)
+            buildVariables = formatModelParams(buildVariables, modelPath, modelSpec)
             ccsSets.extend(pflow.genBuildStatement(
                 ["{condition}/ccs/{movieName}.consensusreadset.xml"],
                 "ccs",
@@ -31,10 +37,10 @@ def genCCS(pflow, subreadSets):
                 buildVariables))
     return ccsSets
 
-def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
+def genChunkedCCS(pflow, subreadSets, modelPath, modelSpec, splitFactor=8, doMerge=True):
     ccsRule = pflow.genRuleOnce(
         "ccs",
-        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus --reportFile=$ccsDiagnostics $in $outBam && " +
+        "$gridSMP $ncpus ccs --pbi --force --numThreads=$ncpus --reportFile=$ccsDiagnostics $modelPath $modelSpec $in $outBam && " +
         "dataset create --type ConsensusReadSet $out $outBam")
     ccsSets = []
     for subreadSet in subreadSets:
@@ -46,6 +52,7 @@ def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
                     outBam = pflow.formatInContext("{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.ccs.bam")
                     ccsDiagnostics = pflow.formatInContext("{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.ccs-report.txt")
                     buildVariables = dict(outBam=outBam, ccsDiagnostics=ccsDiagnostics)
+                    buildVariables = formatModelParams(buildVariables, modelPath, modelSpec)
                     buildStmt = pflow.genBuildStatement(
                         ["{condition}/ccs_chunks/{movieName}.chunk{chunkNum}.consensusreadset.xml"],
                         "ccs",
@@ -65,8 +72,8 @@ def genChunkedCCS(pflow, subreadSets, splitFactor=8, doMerge=True):
         return ccsSets
 
 
-def genCCSAndMapping(pflow, subreadSets, reference):
-    ccsSets = genChunkedCCS(pflow, subreadSets, doMerge=False)
+def genCCSAndMapping(pflow, subreadSets, modelPath, modelSpec, reference):
+    ccsSets = genChunkedCCS(pflow, subreadSets, modelPath, modelSpec, doMerge=False)
     alignmentSets = genMappingCCS(pflow, ccsSets, reference)
     return alignmentSets
 
@@ -90,7 +97,9 @@ class BasicCCSWorkflow(Workflow):
             with pflow.context("condition", condition):
                 assert ct.inputType == InputType.SubreadSet # TODO: move to validation.
                 subreadSets = genSubreads(pflow, ct.inputs(condition))
-                outputDict[condition] = genCCS(pflow, subreadSets)
+                modelPath = ct.modelPath(condition)
+                modelSpec = ct.modelSpec(condition)
+                outputDict[condition] = genCCS(pflow, subreadSets, modelPath, modelSpec)
         return outputDict
 
 
@@ -112,7 +121,9 @@ class ChunkedCCSWorkflow(Workflow):
             with pflow.context("condition", condition):
                 assert ct.inputType == InputType.SubreadSet # TODO: move to validation.
                 subreadSets = genSubreads(pflow, ct.inputs(condition))
-                outputDict[condition] = genChunkedCCS(pflow, subreadSets)
+                modelPath = ct.modelPath(condition)
+                modelSpec = ct.modelSpec(condition)
+                outputDict[condition] = genChunkedCCS(pflow, subreadSets, modelPath, modelSpec)
         return outputDict
 
 
@@ -135,7 +146,10 @@ class CCSMappingWorkflow(Workflow):
             with pflow.context("condition", condition):
                 assert ct.inputType == InputType.SubreadSet # TODO: move to validation.
                 subreadSets = genSubreads(pflow, ct.inputs(condition))
-                outputDict[condition] = genCCSAndMapping(pflow, subreadSets, ct.reference(condition))
+                modelPath = ct.modelPath(condition)
+                modelSpec = ct.modelSpec(condition)
+                reference = ct.reference(condition)
+                outputDict[condition] = genCCSAndMapping(pflow, subreadSets, modelPath, modelSpec, reference)
         return outputDict
 
 
