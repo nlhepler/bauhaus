@@ -5,3 +5,4 @@ from .ccs               import *
 from .noHQ              import *
 from .subreads          import *
 from .unrolled          import *
+from .arrowTraining     import *
