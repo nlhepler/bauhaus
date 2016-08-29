@@ -90,49 +90,41 @@ as a small diff.
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk0.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk0.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk1.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk1.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk2.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk2.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk3.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk3.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk4.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk4.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk5.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk5.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk6.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk6.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160305_235923.chunk7.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160305_235923.chunk7.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
@@ -165,49 +157,41 @@ as a small diff.
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk0.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk0.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk1.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk1.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk2.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk2.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk3.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk3.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk4.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk4.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk5.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk5.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk6.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk6.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
   build Ecoli/mapping_chunks/m54011_160306_050740.chunk7.alignmentset.xml: $
       map Ecoli/subreads_chunks/m54011_160306_050740.chunk7.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
   
@@ -252,49 +236,41 @@ as a small diff.
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk0.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk0.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk1.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk1.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk2.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk2.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk3.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk3.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk4.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk4.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk5.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk5.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk6.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk6.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_002050.chunk7.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_002050.chunk7.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
@@ -327,49 +303,41 @@ as a small diff.
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk0.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk0.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk1.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk1.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk2.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk2.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk3.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk3.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk4.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk4.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk5.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk5.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk6.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk6.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
   build Lambda/mapping_chunks/m54008_160308_053311.chunk7.alignmentset.xml: $
       map Lambda/subreads_chunks/m54008_160308_053311.chunk7.subreadset.xml
-    ncpus = 8
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
   
