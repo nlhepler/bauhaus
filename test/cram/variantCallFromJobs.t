@@ -29,9 +29,9 @@ Do variant calling from pre-existing mapping jobs.
     command = $grid dataset merge $out $in
   
   rule variantCalling
-    command = $gridSMP $ncpus variantCaller --algorithm=arrow $
-        $coverageLimitArgument -x0 -q0 -j $ncpus $in -r $reference -o $out -o $
-        $consensusFasta -o $consensusFastq
+    command = $gridSMP $ncpus variantCaller $modelPath $modelSpec $
+        --algorithm=arrow $coverageLimitArgument -x0 -q0 -j $ncpus $in -r $
+        $reference -o $out -o $consensusFasta -o $consensusFastq
   
   
   # Build targets
@@ -45,17 +45,21 @@ Do variant calling from pre-existing mapping jobs.
   
   build Ecoli/variant_calling/arrow/variants.gff: variantCalling $
       Ecoli/mapping/all_movies.alignmentset.xml
-    consensusFastq = Ecoli/variant_calling/arrow/consensus.fastq
-    coverageLimitArgument = 
-    consensusFasta = Ecoli/variant_calling/arrow/consensus.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/ecoliK12_pbi_March2013/sequence/ecoliK12_pbi_March2013.fasta
+    consensusFasta = Ecoli/variant_calling/arrow/consensus.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Ecoli/variant_calling/arrow/consensus.fastq
+    coverageLimitArgument = 
   
   build Lambda/variant_calling/arrow/variants.gff: variantCalling $
       Lambda/mapping/all_movies.alignmentset.xml
-    consensusFastq = Lambda/variant_calling/arrow/consensus.fastq
-    coverageLimitArgument = 
-    consensusFasta = Lambda/variant_calling/arrow/consensus.fasta
     reference = $
         /mnt/secondary/iSmrtanalysis/current/common/references/lambdaNEB/sequence/lambdaNEB.fasta
+    consensusFasta = Lambda/variant_calling/arrow/consensus.fasta
+    modelSpec = 
+    modelPath = 
+    consensusFastq = Lambda/variant_calling/arrow/consensus.fastq
+    coverageLimitArgument = 
   
