@@ -65,7 +65,7 @@ def genUnrolledReadSetSplit(pflow, unrolledReadSet, splitFactor):
     return buildStmt.outputs
 
 
-def genUnrolledMapping(pflow, unrolledReadSets, reference, splitFactor):
+def genUnrolledMapping(pflow, unrolledReadSets, reference, splitFactor=8, doMerge=False):
     # TODO here:
     # 1. chunking
     # 2. mapping
@@ -87,8 +87,11 @@ def genUnrolledMapping(pflow, unrolledReadSets, reference, splitFactor):
                         [unrolledReadSetChunk],
                         buildVariables)
                     alignmentSetChunks.extend(buildStmt.outputs)
-            alignmentSets.extend(
-                genDatasetConsolidateForMovie(pflow, alignmentSetChunks, "unrolled_mapping", "unrolledalignmentset"))
+            if doMerge:
+                alignmentSets.extend(
+                    genDatasetConsolidateForMovie(pflow, alignmentSetChunks, "unrolled_mapping", "unrolledalignmentset"))
+            else:
+                alignmentSets.extend(alignmentSetChunks)
     return genDatasetMergeForCondition(pflow, alignmentSets, "unrolled_mapping", "unrolledalignmentset")
 
 
