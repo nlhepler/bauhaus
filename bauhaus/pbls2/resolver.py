@@ -133,6 +133,7 @@ class Resolver(object):
         jobsRoot = self.SMRTLINK_SERVER_TO_JOBS_ROOT[smrtLinkServer]
         if not op.exists(jobsRoot):
             raise ResolverFailure("NFS unavailable?")
+        jobId = int(jobId)
         prefix = jobId // 1000
         jobPath = op.join(jobsRoot, "%03d" % prefix, "%06d" % jobId)
         if not op.isdir(jobPath):
