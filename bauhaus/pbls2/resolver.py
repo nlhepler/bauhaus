@@ -97,7 +97,7 @@ class Resolver(object):
         """
         Given the secondary job path (SMRTlink), find the alignment set within
         """
-        candidates = glob(op.join(jobDir, "tasks/*/final*alignmentset.xml"))
+        candidates = glob(op.join(jobDir, "tasks/*/combined.alignmentset.xml"))
         if len(candidates) < 1:
             raise DataNotFound("AlignmentSet not found in job directory %s " % jobDir)
         elif len(candidates) > 1:
