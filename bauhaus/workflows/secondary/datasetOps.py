@@ -1,4 +1,5 @@
 import os.path as op
+import re
 from xml.etree import ElementTree
 
 def movieName(filename):
@@ -13,8 +14,11 @@ def movieName(filename):
 
     base = op.basename(filename)
     fields = base.split(".")
-    assert len(fields) in (3, 4) and fields[-1] == "xml"
-    movieName = fields[0]
+    assert len(fields) > 2 and fields[-1] == "xml"
+    if len(fields) > 3 and re.match(r"chunk[0-9]+", fields[-3]):
+        movieName = ".".join(fields[:-3])
+    else:
+        movieName = ".".join(fields[:-2])
     return movieName
 
 def entityName(filename):
