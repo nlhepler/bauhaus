@@ -38,12 +38,12 @@ args <- parser$parse_args()
 
 ###### DEFINITIONS #######
 use8Contexts    = F
-zmwsPerBam      = 3000
+zmwsPerBam      = 5000
 targetAlnLength = 140
 
 ###### LOAD DATA ########
 loginfo("Loading BAM indices")
-alnFiles = Sys.glob(file.path(args$alnFilesDir, "*.alignmentset.xml"))
+alnFiles = Sys.glob(file.path(normalizePath(args$alnFilesDir), "*.alignmentset.xml"))
 indexes = lapply(alnFiles, loadPBI)
 
 ## Sample the BAMs and trim, to get alignment windows of ~140 bp from
@@ -97,6 +97,9 @@ training_data = lapply(alns, mkOutcome)
 # Filter alignents where read/reference differ by more than 50%
 filterData <- function(data) {
   isGood <- function(x) {
+    if (x$ref[1] == "-" | x$ref[length(x$ref)] == "-") {
+      return(FALSE)
+    }
     nm = sum(x$read != "-")
     no = sum(x$ref != "-")
     diff = abs(1 - nm/no)
