@@ -203,7 +203,7 @@ outputModelToCpp <- function(fit, fname)
     }
     val <- paste(
       "constexpr double transProbs[CONTEXT_NUMBER][3][4] = {\n",
-      paste(sapply(fit$models, function(m) renderMatrix(m$cfit, unitem:::fit.ctxs[m$ctx + 1])),
+      paste(sapply(fit$models, function(m) renderMatrix(m$cfit, fit$ctxs[m$ctx + 1])),
             collapse=",\n"),
                  "};\n",
                  sep="")
@@ -229,7 +229,7 @@ extractTransitionArray <- function(fit)
         unclass(cos)
     }
     array(data=lapply(fit$models,
-                 function(m) extractTransitonMatrix(m$cfit, unitem:::fit.ctxs[m$ctx + 1])))
+                 function(m) extractTransitonMatrix(m$cfit, fit$ctxs[m$ctx + 1])))
 
 }
 
@@ -259,7 +259,7 @@ loginfo("Plotting emission, transition probabilities")
 
 plotEmissions <- function(fit, fname) {
   lvs  = rep(c(levels(training_data[[1]]$outcome), rep("N:N", 5)), 16)
-  ctxs = c(sapply(unitem:::fit.ctxs, function(z) rep(z, 17)))
+  ctxs = c(sapply(fit$ctxs, function(z) rep(z, 17)))
   mats = list(fit$mPmf, fit$bPmf, fit$sPmf)
   titles = c("Match", "Cognate Extra", "Non-Cognate Extra")
   titles = paste(titles, "State Emission Probabilites")
@@ -285,7 +285,7 @@ plotTransProbsFull <- function(fit, fname) {
     colnames(tg) <- c("Match", "Branch", "Stick", "Delete")
     snr = model.matrix(cmodel)[,2]
     tg$SNR = snr
-    ctx = unitem:::fit.ctxs[fit$models[[i]]$ctx + 1]
+    ctx = fit$ctxs[fit$models[[i]]$ctx + 1]
     tp = reshape2::melt(tg, id.vars = "SNR", value.name="rate", variable.name="Transition")
     v = ggplot(tp, aes(x=SNR, y =rate)) + geom_smooth(fill=NA) + facet_wrap(~Transition, scales="free") + labs(title=paste(ctx,"Rate Estimates")) + theme_bw() +
       scale_y_continuous(label=percent)
